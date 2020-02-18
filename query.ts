@@ -1,5 +1,5 @@
 import { maxTryCount, ProviderList } from "./settings";
-import { composeAPI } from "@iota/core";
+import { composeAPI, Bundle, Transaction } from "@iota/core";
 
 //In time
 export enum DIRECTION {
@@ -8,8 +8,13 @@ export enum DIRECTION {
     BACKWARD
 }
 
-export async function Query(request) : Promise<{}> {
-    return new Promise<{}>(async (resolve, reject) => {
+export interface QueryRequest {
+    addresses ?: string[],
+    bundles ?: string[]
+}
+
+export async function Query(request : QueryRequest) : Promise<Transaction[]> {
+    return new Promise<Transaction[]>(async (resolve, reject) => {
         for(let i=0; i < maxTryCount; i++) {
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
             let iota = composeAPI({provider : provider});
@@ -27,10 +32,10 @@ export async function Query(request) : Promise<{}> {
     });
 }
 
-async function _Query(request, iota) : Promise<{}> {
-    return new Promise<{}>((resolve, reject) => {
+async function _Query(request : QueryRequest, iota : any) : Promise<Transaction[]> {
+    return new Promise<Transaction[]>((resolve, reject) => {
         iota.findTransactionObjects(request)
-        .then((result) => {
+        .then((result : Transaction[]) => {
             resolve(result);
         })
         .catch((err : Error) => {
@@ -39,8 +44,8 @@ async function _Query(request, iota) : Promise<{}> {
     });
 }
 
-export async function GetInclusionStates(transactions) : Promise<{}> {
-    return new Promise<{}>(async (resolve, reject) => {
+export async function GetInclusionStates(transactions : string[]) : Promise<boolean[]> {
+    return new Promise<boolean[]>(async (resolve, reject) => {
         for(let i=0; i < maxTryCount; i++) {
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
             let iota = composeAPI({provider : provider});

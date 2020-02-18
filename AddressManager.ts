@@ -1,5 +1,5 @@
 import { involvedAddress } from "./involvedAddress";
-import { BundleManager } from "./bundlemanager";
+import { BundleManager } from "./BundleManager";
 import { DIRECTION } from "./query";
 
 export class AddressManager {

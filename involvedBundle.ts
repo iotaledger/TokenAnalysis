@@ -1,5 +1,4 @@
 import { Query, GetInclusionStates } from "./query";
-import { Transaction } from "@iota/core";
 
 interface Tx {
     tag : string,
@@ -26,7 +25,7 @@ export class involvedBundle {
     public async Query() : Promise<void>{
         return new Promise<void>((resolve, reject) => {
             Query({bundles:[this.hash]})
-            .then((transactions : Transaction[]) => {
+            .then((transactions) => {
                 let transactionHashes : string[] = [];
                 for(let k=0; k < transactions.length; k++) {
                     transactionHashes.push(transactions[k].hash);

@@ -1,7 +1,7 @@
 import { involvedAddress } from "./involvedAddress";
 import { StartAddresses, maxQueryDepth } from "./settings";
 import { AddressManager } from "./AddressManager";
-import { BundleManager } from "./bundlemanager";
+import { BundleManager } from "./BundleManager";
 import { DIRECTION } from "./query";
 
 //Init

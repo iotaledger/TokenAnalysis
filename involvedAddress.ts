@@ -12,6 +12,7 @@ export class involvedAddress {
 
     constructor(addr : string) {
         this.addr = addr;
+        this.timestamp = 0;
         this.inBundles = [];
         this.outBundles = [];
         this.inAddresses = [];
@@ -40,7 +41,7 @@ export class involvedAddress {
                     //Loop through confirmed transactions
                     for(let i=0; i < transactions.length; i++) {
                         //Add unique bundles
-                        Bundles.set(transactions[i].bundle, transactions[i].value + (Bundles.has(transactions[i].bundle)?Bundles.get(transactions[i].bundle):0));
+                        Bundles.set(transactions[i].bundle, transactions[i].value + (Bundles.has(transactions[i].bundle)?<number>Bundles.get(transactions[i].bundle):0));
 
                         //Set the value of the addresses
                         this.timestamp = (this.timestamp > transactions[i].timestamp) ? this.timestamp : transactions[i].timestamp;
