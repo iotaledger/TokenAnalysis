@@ -50,12 +50,13 @@ export class involvedBundle {
                         //Sort Transactions as in or out
                         if(transactions[i].value > 0) {
                             this.totalSpend += transactions[i].value;
-                            this.outAddresses.push(transactions[i].hash);
+                            this.outAddresses.push(transactions[i].address);
                         } else {
-                            this.inAddresses.push(transactions[i].hash);
+                            this.inAddresses.push(transactions[i].address);
                         }
                     }
                     console.log(JSON.stringify(this));
+                    resolve();
                 })
                 .catch((err : Error) => reject(err));
             })

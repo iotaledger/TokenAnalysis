@@ -12,7 +12,6 @@ export async function Query(request) : Promise<{}> {
     return new Promise<{}>(async (resolve, reject) => {
         for(let i=0; i < maxTryCount; i++) {
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
-            console.log(provider);
             let iota = composeAPI({provider : provider});
             try {
                 let result = await _Query(request, iota);
@@ -44,7 +43,6 @@ export async function GetInclusionStates(transactions) : Promise<{}> {
     return new Promise<{}>(async (resolve, reject) => {
         for(let i=0; i < maxTryCount; i++) {
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
-            console.log(provider);
             let iota = composeAPI({provider : provider});
             try {
                 let result = await iota.getLatestInclusion(transactions);

@@ -11,11 +11,11 @@ export class AddressManager {
     }
 
     public async AddAddress(addr : string, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
-        return new Promise<string[]>((resolve, reject) => {
+        return new Promise<string[]>( async (resolve, reject) => {
             //Load the Addresses
             if(!this.addresses.has(addr)) {
                 let newAddr : involvedAddress = new involvedAddress(addr);
-                newAddr.Query()
+                await newAddr.Query()
                 .then(() => {
                     //Add Address to the list
                     this.addresses.set(addr, newAddr);
@@ -41,7 +41,7 @@ export class AddressManager {
                         resolve(newAddr.GetInBundles());
                     }
                 })
-                .catch((err : Error) => console.log(err));
+                .catch((err : Error) => reject(err));
             }
         });
     }

@@ -1,4 +1,5 @@
 export const maxTryCount = 5;
+export const maxQueryDepth = 5;
 
 export const ProviderList = [
     "https://nodes.iota.org:443"
