@@ -1,6 +1,6 @@
 import { Query, GetInclusionStates } from "./query";
 
-interface Tx {
+export interface Tx {
     tag : string,
     addr : string,
     value : number,
@@ -9,16 +9,16 @@ interface Tx {
 
 export class involvedBundle {
     private hash : string;
-    private inAddresses : string[];
-    private outAddresses : string[];
+    private inAddresses : Map<string, string>;
+    private outAddresses : Map<string, string>;
     private totalSpend : number;
     private involvedTxs : Map<string, Tx>;
 
     constructor(bundleHash : string) {
         this.hash = bundleHash;
         this.totalSpend = 0;
-        this.inAddresses = [];
-        this.outAddresses = [];
+        this.inAddresses = new Map<string, string>();
+        this.outAddresses = new Map<string, string>();
         this.involvedTxs = new Map<string, Tx>();
     }
 
@@ -46,15 +46,15 @@ export class involvedBundle {
                             value : transactions[i].value,
                             timestamp : transactions[i].timestamp
                         });
+
                         //Sort Transactions as in or out
                         if(transactions[i].value > 0) {
                             this.totalSpend += transactions[i].value;
-                            this.outAddresses.push(transactions[i].address);
+                            this.outAddresses.set(transactions[i].address, transactions[i].hash);
                         } else {
-                            this.inAddresses.push(transactions[i].address);
+                            this.inAddresses.set(transactions[i].address, transactions[i].hash);
                         }
                     }
-                    console.log(JSON.stringify(this));
                     resolve();
                 })
                 .catch((err : Error) => reject(err));
@@ -63,11 +63,28 @@ export class involvedBundle {
         });
     }
 
+    public hasTrinityTag() : boolean {
+        this.involvedTxs.forEach((value) => {
+            if(value.tag.substr(0,7) == "TRINITY") {
+                return true;
+            }
+        });
+        return false;
+    }
+
     public GetOutAddresses() : string[] {
-        return this.outAddresses;
+        return Array.from(this.outAddresses.keys());
     }
 
     public GetInAddresses() : string[] {
-        return this.inAddresses;
+        return Array.from(this.inAddresses.keys());
+    }
+
+    public GetTX(addr : string) : Tx|undefined {
+        let Tx = this.inAddresses.get(addr);
+        if(!Tx) {
+            this.outAddresses.get(addr);
+        }
+        return (Tx != undefined)?this.involvedTxs.get(Tx):undefined;
     }
 }

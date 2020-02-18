@@ -58,7 +58,7 @@ export class involvedAddress {
                     });
 
                     //Log
-                    console.log(JSON.stringify(this));  
+                    console.log("Processed: " + this.addr);  
                     resolve();              
                 })
                 .catch((err : Error) => {
@@ -73,6 +73,10 @@ export class involvedAddress {
 
     public IsSpent() : boolean {
         return (this.currentValue == 0);
+    }
+
+    public GetCurrentValue() : number {
+        return this.currentValue;
     }
 
     public AddInAddress(addr: string) {

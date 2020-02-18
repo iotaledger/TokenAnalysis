@@ -1,24 +1,26 @@
-import { involvedAddress } from "./involvedAddress";
 import { StartAddresses, maxQueryDepth } from "./settings";
 import { AddressManager } from "./AddressManager";
 import { BundleManager } from "./BundleManager";
 import { DIRECTION } from "./query";
+import { GMLExporter } from "./GMLexporter";
 
 //Init
-async function LoadInitialAddresses() {
-    for(let i = 0; i < StartAddresses.length; i++) {
-        QueryAddress(StartAddresses[i]);
-    }
+function LoadInitialAddresses() {
+    let addr = StartAddresses[0];
+    QueryAddress(addr)
+    .then(() => {
+        console.log("Beep");
+        GMLExporter.ExportToGML([addr]);
+    });
 }
 
 async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTION.FORWARD) {
     //Variables
     let nextAddressesToQuery : string[] = [addr];
     let counter = 0;
-    let newStuffFound : boolean = true;
 
     //Keep querying until max depth or end found
-    while(newStuffFound && counter < maxQueryDepth) {
+    while(nextAddressesToQuery.length && counter < maxQueryDepth) {
         const addressesToQuery = [...nextAddressesToQuery];
         nextAddressesToQuery = [];
         let addrPromises : Promise<void>[] = [];
@@ -37,7 +39,7 @@ async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTIO
                     .then((addresses : string[]) => {
                         nextAddressesToQuery = nextAddressesToQuery.concat(addresses);
                     })
-                    .catch((err : Error) => console.log(err)));
+                    .catch((err : Error) => console.log("Top Bundle Error: "+err)));
                 }
                 //Wait for all Bundles to finish
                 await Promise.all(bundlePromise);
@@ -47,11 +49,13 @@ async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTIO
                     return (AddressManager.GetInstance().GetAddressItem(nextAddressesToQuery[index])==undefined && nextAddressesToQuery.indexOf(addr) === index);
                 });
             })
-            .catch((err : Error) => console.log(err)));
+            .catch((err : Error) => console.log("Top Address Error: " +err)));
         }
         //Wait for all Addresses to finish
+        console.log("Waiting");
         await Promise.all(addrPromises);
         console.log("Iterration " + counter);
+        console.log(JSON.stringify(nextAddressesToQuery));
 
         //Increment Depth
         counter++;
@@ -59,4 +63,5 @@ async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTIO
 }
 
 LoadInitialAddresses();
+
 
