@@ -2,7 +2,7 @@ import { StartAddresses, maxQueryDepth } from "./settings";
 import { AddressManager } from "./AddressManager";
 import { BundleManager } from "./BundleManager";
 import { DIRECTION } from "./query";
-import { GMLExporter } from "./GMLexporter";
+import { GraphExporter } from "./GraphExporter";
 
 //Init
 function LoadInitialAddresses() {
@@ -10,7 +10,8 @@ function LoadInitialAddresses() {
     QueryAddress(addr)
     .then(() => {
         console.log("Beep");
-        GMLExporter.ExportToGML([addr]);
+        let exporter = new GraphExporter(addr, [addr]);
+        exporter.ExportToDOT();
     });
 }
 

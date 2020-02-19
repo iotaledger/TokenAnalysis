@@ -82,8 +82,8 @@ export class involvedBundle {
 
     public GetTX(addr : string) : Tx|undefined {
         let Tx = this.inAddresses.get(addr);
-        if(!Tx) {
-            this.outAddresses.get(addr);
+        if(Tx == undefined) {
+            Tx = this.outAddresses.get(addr);
         }
         return (Tx != undefined)?this.involvedTxs.get(Tx):undefined;
     }
