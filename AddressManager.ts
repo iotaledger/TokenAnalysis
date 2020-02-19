@@ -2,6 +2,7 @@ import { involvedAddress } from "./involvedAddress";
 import { BundleManager } from "./BundleManager";
 import { DIRECTION } from "./query";
 
+
 export class AddressManager {
     private static instance : AddressManager;
     private addresses : Map<string, involvedAddress>;
@@ -15,7 +16,7 @@ export class AddressManager {
             //Load the Addresses
             if(!this.addresses.has(addr)) {
                 let newAddr : involvedAddress = new involvedAddress(addr);
-                await newAddr.Query()
+                newAddr.Query()
                 .then(() => {
                     //Add Address to the list
                     this.addresses.set(addr, newAddr);
@@ -42,6 +43,9 @@ export class AddressManager {
                     }
                 })
                 .catch((err : Error) => reject(err));
+            } else {
+                //Addresses has already been loaded
+                resolve([]);
             }
         });
     }

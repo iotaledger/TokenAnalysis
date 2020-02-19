@@ -2,6 +2,7 @@ import { involvedBundle } from "./involvedBundle";
 import { AddressManager } from "./AddressManager";
 import { DIRECTION } from "./query";
 
+
 export class BundleManager {
     private static instance : BundleManager;
     private bundles : Map<string, involvedBundle>;
@@ -39,6 +40,8 @@ export class BundleManager {
                     }
                 })
                 .catch((err : Error) => reject(err));
+            } else {
+                resolve([]);
             }
         });
     }

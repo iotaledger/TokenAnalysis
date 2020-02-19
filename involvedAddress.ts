@@ -1,5 +1,6 @@
-import { Query, GetInclusionStates, DIRECTION } from "./query";
+import { Query, GetInclusionStates } from "./query";
 import { Transaction } from "@iota/core";
+
 
 export class involvedAddress {
     private addr : string;

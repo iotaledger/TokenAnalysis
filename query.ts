@@ -39,6 +39,7 @@ async function _Query(request : QueryRequest, iota : any) : Promise<Transaction[
             resolve(result);
         })
         .catch((err : Error) => {
+            console.log("_Query error: " + err);
             reject(err);
         });
     });
@@ -50,7 +51,7 @@ export async function GetInclusionStates(transactions : string[]) : Promise<bool
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
             let iota = composeAPI({provider : provider});
             try {
-                let result = await iota.getLatestInclusion(transactions);
+                let result = await _GetInclusionStates(transactions, iota);
                 resolve(result);
                 return;
             }
@@ -59,5 +60,18 @@ export async function GetInclusionStates(transactions : string[]) : Promise<bool
             }
         }
         reject("Rejected request as MaxTryCount is reached");
+    });
+}
+
+async function _GetInclusionStates(transactions : string[], iota : any) : Promise<boolean[]> {
+    return new Promise<boolean[]>(async (resolve, reject) => {
+        iota.getLatestInclusion(transactions)
+        .then((result : boolean[]) => {
+            resolve(result);
+        })
+        .catch((err : Error) => {
+            console.log("_Inclusion error: " + err);
+            reject(err);
+        });
     });
 }
