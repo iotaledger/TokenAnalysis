@@ -117,12 +117,13 @@ export class GraphExporter {
 
         //Opening
         fileString = fileString.concat("digraph " + this.name + " {\n");
+        fileString = fileString.concat("rankdir=LR;\n");
 
         //Define all addresses without balance
         fileString = fileString.concat("node [shape=box]\n");
         for(let i=0; i<this.addresses.length;i++) {
             if(AddressManager.GetInstance().GetAddressItem(this.addresses[i])?.IsSpent()) {
-                fileString = fileString.concat(this.addresses[i] + "[label=\"" + this.addresses[i].substr(0,3) + "..." +  this.addresses[i].substr(this.addresses[i].length-3,3) + "\"]\n");
+                fileString = fileString.concat("\"" + this.addresses[i] + "\"[label=\"" + this.addresses[i].substr(0,3) + "..." +  this.addresses[i].substr(this.addresses[i].length-3,3) + "\"]\n");
             }
         }
 
@@ -131,19 +132,19 @@ export class GraphExporter {
         for(let i=0; i<this.addresses.length;i++) {
             let addr = <involvedAddress>AddressManager.GetInstance().GetAddressItem(this.addresses[i]);
             if(!addr.IsSpent()) {
-                fileString = fileString.concat(this.addresses[i] + "[label=\"" + this.addresses[i].substr(0,3) + "..." +  this.addresses[i].substr(this.addresses[i].length-3,3) + "\\n"+ valueLabel(addr.GetCurrentValue()) +"\"]\n");
+                fileString = fileString.concat("\"" + this.addresses[i] + "\"[label=\"" + this.addresses[i].substr(0,3) + "..." +  this.addresses[i].substr(this.addresses[i].length-3,3) + "\\n"+ valueLabel(addr.GetCurrentValue()) +"\"]\n");
             }
         }
 
         //Define all bundles
         fileString = fileString.concat("node [shape=ellipse, style=unfilled, color=\"black\"]\n");
         for(let i=0; i<this.bundles.length;i++) {
-            fileString = fileString.concat(this.bundles[i] + "[label=\"" + this.bundles[i].substr(0,3) + "..." +  this.bundles[i].substr(this.bundles[i].length-3,3) + "\"]\n");
+            fileString = fileString.concat("\"" +this.bundles[i] + "\"[label=\"" + this.bundles[i].substr(0,3) + "..." +  this.bundles[i].substr(this.bundles[i].length-3,3) + "\"]\n");
         }
 
         //Add all edges
         for(let i=0; i<this.edges.length; i++) {
-            fileString = fileString.concat(this.edges[i].begin + " -> " + this.edges[i].end);
+            fileString = fileString.concat("\"" + this.edges[i].begin + "\" -> \"" + this.edges[i].end + "\"");
             fileString = fileString.concat("[label=\""+ valueLabel(this.edges[i].value) +"\"];\n")
         }
 
