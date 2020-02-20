@@ -2,13 +2,9 @@ import { AddressManager } from "./AddressManager";
 import { involvedAddress } from "./involvedAddress";
 import { BundleManager } from "./BundleManager";
 import { involvedBundle } from "./involvedBundle";
+import { involvedTransaction } from "./involvedTransaction";
+import { TransactionManager } from "./TransactionManager";
 const fs = require('fs');
-
-interface edge {
-    begin : string,
-    end : string,
-    value : number
-}
 
 function valueLabel(value : number) : string {
     let negative = (value<0);
@@ -29,21 +25,31 @@ function valueLabel(value : number) : string {
     return label;
 }
 
+function timestampLabel(timestamp : number) : string {
+    let date = new Date();
+    date.setDate(timestamp);
+    return date.toLocaleString();
+}
+
 export class GraphExporter {
-    private addresses : string[];
-    private bundles : string[];
-    private edges : edge[];
+    private addresses : Map<string, involvedAddress>;
+    private bundles : Map<string, involvedBundle>;
+    private edges : Map<string, involvedTransaction>;
     private name : string;
 
-    constructor(name : string, addr : string[]) {
+    constructor(name : string) {
         this.name = name;
-        this.addresses = [];
-        this.bundles = [];
-        this.edges = [];
+        this.addresses = new Map<string,involvedAddress>();
+        this.bundles = new Map<string, involvedBundle>();
+        this.edges = new Map<string, involvedTransaction>();
 
-        for(let i=0; i<addr.length; i++) {
-            this.AddAddressSubGraph(addr[i]);
-        }
+    }
+
+    public AddAll() {
+        //Store all
+        this.addresses = AddressManager.GetInstance().GetAddresses();
+        this.bundles = BundleManager.GetInstance().GetBundles();
+        this.calculateEdges();
     }
 
     public AddAddressSubGraph(addr : string) {
@@ -58,14 +64,15 @@ export class GraphExporter {
             for(let i=0; i < currentAddresses.length; i++) {
                 let inMemAddr = AddressManager.GetInstance().GetAddressItem(currentAddresses[i]);
                 if(inMemAddr) {
-                    this.addresses.push(currentAddresses[i]);
+                    inMemAddr = <involvedAddress>inMemAddr;
+                    this.addresses.set(currentAddresses[i], inMemAddr);
                     //Loop over the Bundles
-                    let outBundles = (<involvedAddress>inMemAddr).GetOutBundles();
+                    let outBundles = inMemAddr.GetOutBundles();
                     for(let k=0; k < outBundles.length; k++) {
                         let outBundle = BundleManager.GetInstance().GetBundleItem(outBundles[k]);
                         //Prevent adding unknowns and duplicates
-                        if(outBundle && this.bundles.indexOf(outBundles[k]) === -1) {
-                            this.bundles.push(outBundles[k]);
+                        if(outBundle && !this.bundles.has(outBundles[k])) {
+                            this.bundles.set(outBundles[k], outBundle);
                             addressesToCheck = addressesToCheck.concat(outBundle.GetOutAddresses());
                         } else {
                             console.log("Unknown or duplicate");
@@ -75,39 +82,24 @@ export class GraphExporter {
             }
             //Remove addresses we already processed and duplicates
             addressesToCheck.filter((addr, index) => {
-                return this.addresses.indexOf(addr) === undefined && addressesToCheck.indexOf(addr) === index;
+                return !this.addresses.has(addr) && addressesToCheck.indexOf(addr) === index;
             });
         }
 
-        //Create a List of all edges
-        for(let i=0; i < this.bundles.length; i++) {
-            //Input Edges - Save to cast because we checked before
-            let bundle = <involvedBundle>BundleManager.GetInstance().GetBundleItem(this.bundles[i]);
-            let inAddr = bundle.GetInAddresses();
-            for(let k=0; k < inAddr.length; k++) {
-                let value = 0;
-                let tx = bundle.GetTX(inAddr[k]);
-                if(tx) {
-                    value = tx.value;
-                }
-                if(AddressManager.GetInstance().GetAddressItem(inAddr[k])) {
-                    this.edges.push({begin:inAddr[k], end:this.bundles[i], value:value});
-                }
-            }
+        this.calculateEdges();
+    }
 
-            //Output Edges
-            let outAddr = bundle.GetOutAddresses();
-            for(let k=0; k < outAddr.length; k++) {
-                let value = 0;
-                let tx = bundle.GetTX(outAddr[k]);
-                if(tx) {
-                    value = tx.value;
-                } 
-                if(AddressManager.GetInstance().GetAddressItem(outAddr[k])) {
-                    this.edges.push({begin:this.bundles[i], end:outAddr[k], value:value});
-                }
+    private calculateEdges() {
+        //Create a list of edges
+        const transactions = TransactionManager.GetInstance().GetTransactions();
+        transactions.forEach((value : involvedTransaction, key : string) => {
+            //Check if the nodes are included
+            let inputHash = value.GetInput();
+            let outputHash = value.GetOutput();
+            if((this.addresses.has(inputHash) || this.bundles.has(inputHash)) && (this.addresses.has(outputHash) || this.bundles.has(outputHash))) {
+                this.edges.set(key, value);
             }
-        }
+        });
     }
 
     public ExportToDOT() {
@@ -121,38 +113,81 @@ export class GraphExporter {
 
         //Define all addresses without balance
         fileString = fileString.concat("node [shape=box]\n");
-        for(let i=0; i<this.addresses.length;i++) {
-            if(AddressManager.GetInstance().GetAddressItem(this.addresses[i])?.IsSpent()) {
-                fileString = fileString.concat("\"" + this.addresses[i] + "\"[label=\"" + this.addresses[i].substr(0,3) + "..." +  this.addresses[i].substr(this.addresses[i].length-3,3) + "\"]\n");
+        this.addresses.forEach((value : involvedAddress, key : string) =>{
+            if(value.IsSpent()) {
+                fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." +  key.substr(key.length-3,3) + "\"]\n");
             }
-        }
+        });
 
         //Render all addresses with balance
         fileString = fileString.concat("node [style=filled, color=\"green\"]\n");
-        for(let i=0; i<this.addresses.length;i++) {
-            let addr = <involvedAddress>AddressManager.GetInstance().GetAddressItem(this.addresses[i]);
-            if(!addr.IsSpent()) {
-                fileString = fileString.concat("\"" + this.addresses[i] + "\"[label=\"" + this.addresses[i].substr(0,3) + "..." +  this.addresses[i].substr(this.addresses[i].length-3,3) + "\\n"+ valueLabel(addr.GetCurrentValue()) +"\"]\n");
+        this.addresses.forEach((value : involvedAddress, key : string) =>{
+            if(!value.IsSpent()) {
+                fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." + key.substr(key.length-3,3) + "\\n"+ valueLabel(value.GetCurrentValue()) +"\"]\n");
             }
-        }
+        });
 
         //Define all bundles
         fileString = fileString.concat("node [shape=ellipse, style=unfilled, color=\"black\"]\n");
-        for(let i=0; i<this.bundles.length;i++) {
-            fileString = fileString.concat("\"" +this.bundles[i] + "\"[label=\"" + this.bundles[i].substr(0,3) + "..." +  this.bundles[i].substr(this.bundles[i].length-3,3) + "\"]\n");
-        }
+        this.bundles.forEach((value : involvedBundle, key : string) => {
+            fileString = fileString.concat("\"" + key + "\"[label=\"" + timestampLabel(value.GetTimestamp()) + "\"]\n");
+        });
 
         //Add all edges
-        for(let i=0; i<this.edges.length; i++) {
-            fileString = fileString.concat("\"" + this.edges[i].begin + "\" -> \"" + this.edges[i].end + "\"");
-            fileString = fileString.concat("[label=\""+ valueLabel(this.edges[i].value) +"\"];\n")
-        }
+        this.edges.forEach((value : involvedTransaction, key : string ) => {
+            fileString = fileString.concat("\"" + value.GetInput() + "\" -> \"" + value.GetOutput() + "\"");
+            fileString = fileString.concat("[label=\""+ valueLabel(value.GetValue()) +"\"];\n")
+        });
 
         //Closing
         fileString = fileString.concat("}");
 
         //Write to file
         fs.writeFile("DOT/" + this.name + ".gv", fileString, (err : Error) => {
+            if(err) console.log("Error writing file: " + this.name + ":" + err);
+            else {
+                console.log("Succesfully saved " + this.name);
+            }
+        });
+    }
+
+    public ExportToCSV() {
+        //Initialize
+        let fileString = "";
+
+        //Save Transactions
+        this.edges.forEach((value : involvedTransaction, key : string) => {
+            fileString = fileString.concat("tx;" + key + ";" + value.GetInput() + ';' + value.GetOutput() + ";" + value.GetValue() + ";" + value.GetTag() + "\n");
+        });
+
+        //Save Addresses
+        this.addresses.forEach((value : involvedAddress, key : string) => {
+            //Initial Values
+            fileString = fileString.concat("addr;" + key + ";" + value.GetTimestamp() + ";" + value.GetCurrentValue());
+            
+            //Arrays
+            fileString = fileString.concat(";" + JSON.stringify(value.GetInTxs()));
+            fileString = fileString.concat(";" + JSON.stringify(value.GetOutTxs()));
+
+            //Finish
+            fileString = fileString.concat("\n");
+        });
+
+        //Save Bundles
+        this.bundles.forEach((value : involvedBundle, key : string) => {
+            //Initial Values
+            fileString = fileString.concat("bundle;" + key + ";" + value.GetTimestamp());
+
+            //Arrays
+            fileString = fileString.concat(";" + JSON.stringify(value.GetInTxs()));
+            fileString = fileString.concat(";" + JSON.stringify(value.GetOutTxs()));
+
+            //Finish
+            fileString = fileString.concat("\n");
+        });
+
+        //Store to File
+        fs.writeFile("Database/" + this.name + ".csv", fileString, (err : Error) => {
             if(err) console.log("Error writing file: " + this.name + ":" + err);
             else {
                 console.log("Succesfully saved " + this.name);

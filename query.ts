@@ -24,7 +24,7 @@ export async function Query(request : QueryRequest) : Promise<Transaction[]> {
                 return;
             }
             catch(err) {
-                console.log("Error caught: " + err);
+                console.log("Error caught for node "+provider+": " + err);
                 console.log("Request: " + JSON.stringify(request));
             }
         }
@@ -39,7 +39,6 @@ async function _Query(request : QueryRequest, iota : any) : Promise<Transaction[
             resolve(result);
         })
         .catch((err : Error) => {
-            console.log("_Query error: " + err);
             reject(err);
         });
     });
@@ -56,7 +55,7 @@ export async function GetInclusionStates(transactions : string[]) : Promise<bool
                 return;
             }
             catch(err) {
-                console.log("Error caught: " + err);
+                console.log("Error caught for node "+provider+" : " + err);
             }
         }
         reject("Rejected request as MaxTryCount is reached");
@@ -70,7 +69,6 @@ async function _GetInclusionStates(transactions : string[], iota : any) : Promis
             resolve(result);
         })
         .catch((err : Error) => {
-            console.log("_Inclusion error: " + err);
             reject(err);
         });
     });

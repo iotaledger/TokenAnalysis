@@ -1,6 +1,8 @@
 import { involvedBundle } from "./involvedBundle";
 import { AddressManager } from "./AddressManager";
 import { DIRECTION } from "./query";
+import { involvedTransaction } from "./involvedTransaction";
+import { TransactionManager } from "./TransactionManager";
 
 
 export class BundleManager {
@@ -11,6 +13,10 @@ export class BundleManager {
         this.bundles = new Map<string, involvedBundle>();
     }
 
+    public LoadBundle(bundle : involvedBundle) {
+        this.bundles.set(bundle.GetBundleHash(), bundle);
+    }
+
     public async AddBundle(bundleHash : string, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
             //Load the Bundles
@@ -19,19 +25,8 @@ export class BundleManager {
                 bundle.Query()
                 .then(() => {
                     //Add Bundle to the list
-                    this.bundles.set(bundleHash, bundle);
+                    this.bundles.set(bundleHash, bundle);                    
 
-                    //Stich In -> Out
-                    const ins = bundle.GetInAddresses();
-                    const outs = bundle.GetOutAddresses();
-                    for(let i=0; i<ins.length;i++) {
-                        for(let k=0; k<outs.length; k++) {
-                            let addrItem = AddressManager.GetInstance().GetAddressItem(ins[i]);
-                            if(addrItem) {
-                                addrItem.AddOutAddress(outs[k]);
-                            }
-                        }
-                    }
                     //Return the next addresses to process
                     if(loadDirection == DIRECTION.FORWARD) {
                         resolve(bundle.GetOutAddresses());
@@ -56,5 +51,9 @@ export class BundleManager {
 
     public GetBundleItem(bundleHash : string) : involvedBundle|undefined {
         return this.bundles.get(bundleHash);
+    }
+
+    public GetBundles() : Map<string, involvedBundle> {
+        return this.bundles;
     }
 }

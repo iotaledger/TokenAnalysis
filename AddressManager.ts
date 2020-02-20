@@ -11,6 +11,10 @@ export class AddressManager {
         this.addresses = new Map<string, involvedAddress>();
     }
 
+    public LoadAddress(addr : involvedAddress) {
+        this.addresses.set(addr.GetAddressHash(), addr);
+    }
+
     public async AddAddress(addr : string, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
         return new Promise<string[]>( async (resolve, reject) => {
             //Load the Addresses
@@ -21,20 +25,6 @@ export class AddressManager {
                     //Add Address to the list
                     this.addresses.set(addr, newAddr);
 
-                    //Stich Out -> In
-                    const bundles = newAddr.GetInBundles();
-                    for(let i=0; i < bundles.length; i++) {
-                        const bundleItem = BundleManager.GetInstance().GetBundleItem(bundles[i]);
-                        if(bundleItem) {
-                            const outAddresses = bundleItem.GetInAddresses();
-                            for(let k=0; k < outAddresses.length; k++) {
-                                let addrItem = this.addresses.get(outAddresses[k]);
-                                if(addrItem) {
-                                    addrItem.AddOutAddress(addr);
-                                }
-                            }
-                        }
-                    }
                     //Return the next bundles to process
                     if(loadDirection == DIRECTION.FORWARD) {
                         resolve(newAddr.GetOutBundles());
@@ -59,5 +49,9 @@ export class AddressManager {
 
     public GetAddressItem(addr : string) : involvedAddress|undefined {
         return this.addresses.get(addr);
+    }
+
+    public GetAddresses() : Map<string,involvedAddress> {
+        return this.addresses;
     }
 }

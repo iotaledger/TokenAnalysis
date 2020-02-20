@@ -1,24 +1,29 @@
 import { Query, GetInclusionStates } from "./query";
 import { Transaction } from "@iota/core";
-
+import { BundleManager } from "./BundleManager";
+import { TransactionManager } from "./TransactionManager";
 
 export class involvedAddress {
     private addr : string;
     private timestamp : number;
     private currentValue : number;
-    private inBundles : string[];
-    private outBundles : string[];
-    private inAddresses : string[];
-    private outAddresses : string[];
+    private inTxs : string[];
+    private outTxs : string[];
 
     constructor(addr : string) {
         this.addr = addr;
         this.timestamp = 0;
-        this.inBundles = [];
-        this.outBundles = [];
-        this.inAddresses = [];
-        this.outAddresses = [];
         this.currentValue = 0;
+        this.inTxs = [];
+        this.outTxs = [];
+    }
+
+    public SetData(addr : string, timestamp : number, currentValue : number, inTxs : string[], outTxs : string[]) {
+        this.addr = addr;
+        this.timestamp = timestamp; 
+        this.currentValue = currentValue;
+        this.inTxs = inTxs;
+        this.outTxs = outTxs;
     }
 
     public async Query() : Promise<void> {
@@ -26,7 +31,6 @@ export class involvedAddress {
             Query({addresses:[this.addr]})
             .then((transactions : Transaction[]) => {
                 //Loop over the transactions
-                let Bundles : Map<string, number> = new Map<string, number>();
                 let transactionHashes : string[] = [];
                 for(let k=0; k < transactions.length; k++) {
                     transactionHashes.push(transactions[k].hash);
@@ -41,23 +45,19 @@ export class involvedAddress {
                     })
                     //Loop through confirmed transactions
                     for(let i=0; i < transactions.length; i++) {
-                        //Add unique bundles
-                        Bundles.set(transactions[i].bundle, transactions[i].value + (Bundles.has(transactions[i].bundle)?<number>Bundles.get(transactions[i].bundle):0));
-
+                        if(transactions[i].value > 0) {
+                            //Create the Transactions
+                            let tx = TransactionManager.GetInstance().AddTransaction(transactions[i].bundle, this.addr, transactions[i].value, transactions[i].tag, transactions[i].hash);
+                            this.inTxs.push(tx.GetTransactionHash());
+                        } else {
+                            //Create the Transactions
+                            let tx = TransactionManager.GetInstance().AddTransaction(this.addr, transactions[i].bundle, transactions[i].value, transactions[i].tag, transactions[i].hash);
+                            this.outTxs.push(tx.GetTransactionHash());
+                        }
                         //Set the value of the addresses
                         this.timestamp = (this.timestamp > transactions[i].timestamp) ? this.timestamp : transactions[i].timestamp;
                         this.currentValue += transactions[i].value;
                     }
-
-                    //Loop through the Bundles
-                    Bundles.forEach((value : number, key : string) => {
-                        if(value > 0) {
-                            this.inBundles.push(key);
-                        } else if(value < 0) {
-                            this.outBundles.push(key);
-                        }
-                    });
-
                     //Log
                     console.log("Processed: " + this.addr);  
                     resolve();              
@@ -72,6 +72,10 @@ export class involvedAddress {
         });   
     }
 
+    public GetAddressHash() : string {
+        return this.addr;
+    }
+
     public IsSpent() : boolean {
         return (this.currentValue == 0);
     }
@@ -80,20 +84,38 @@ export class involvedAddress {
         return this.currentValue;
     }
 
-    public AddInAddress(addr: string) {
-        this.inAddresses.push(addr);
+    public GetInTxs() : string[] {
+        return this.inTxs;
     }
 
-    public AddOutAddress(addr: string) {
-        this.outAddresses.push(addr);
-    }
-
-    public GetOutBundles() : string[] {
-        return this.outBundles;
+    public GetOutTxs() : string[] {
+        return this.outTxs;
     }
 
     public GetInBundles() : string[] {
-        return this.inBundles;
+        let inAddresses : string[] = [];
+        for(let i=0; i < this.inTxs.length; i++) {
+            let tx = TransactionManager.GetInstance().GetTransactionItem(this.inTxs[i]);
+            if(tx) {
+                inAddresses.push(tx.GetInput());
+            }
+        }
+        return inAddresses;
+    }
+
+    public GetOutBundles() : string[] {
+        let outAddresses : string[] = [];
+        for(let i=0; i < this.outTxs.length; i++) {
+            let tx = TransactionManager.GetInstance().GetTransactionItem(this.outTxs[i]);
+            if(tx) {
+                outAddresses.push(tx.GetOutput());
+            }
+        }
+        return outAddresses;
+    }
+
+    public GetTimestamp() : number {
+        return this.timestamp;
     }
 }
 

@@ -3,15 +3,18 @@ import { AddressManager } from "./AddressManager";
 import { BundleManager } from "./BundleManager";
 import { DIRECTION } from "./query";
 import { GraphExporter } from "./GraphExporter";
+import { DatabaseManager } from "./DatabaseManager";
 
 //Init
 function LoadInitialAddresses() {
     let addr = StartAddresses[0];
+    DatabaseManager.ImportFromCSV(addr);
     QueryAddress(addr)
     .then(() => {
-        console.log("Beep");
-        let exporter = new GraphExporter(addr, [addr]);
+        let exporter = new GraphExporter(addr);
+        exporter.AddAll();
         exporter.ExportToDOT();
+        exporter.ExportToCSV();
     });
 }
 
@@ -53,7 +56,6 @@ async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTIO
             .catch((err : Error) => console.log("Top Address Error: " +err)));
         }
         //Wait for all Addresses to finish
-        console.log("Waiting");
         await Promise.all(addrPromises);
         console.log("Iterration " + counter);
         console.log(JSON.stringify(nextAddressesToQuery));

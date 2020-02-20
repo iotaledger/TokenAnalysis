@@ -1,25 +1,27 @@
 import { Query, GetInclusionStates } from "./query";
-
-export interface Tx {
-    tag : string,
-    addr : string,
-    value : number,
-    timestamp : number
-}
+import { AddressManager } from "./AddressManager";
+import { TransactionManager } from "./TransactionManager";
+import { involvedTransaction } from "./involvedTransaction";
+import { involvedAddress } from "./involvedAddress";
 
 export class involvedBundle {
     private hash : string;
-    private inAddresses : Map<string, string>;
-    private outAddresses : Map<string, string>;
-    private totalSpend : number;
-    private involvedTxs : Map<string, Tx>;
+    private timestamp : number;
+    private inTxs : string[];
+    private outTxs : string[];
 
     constructor(bundleHash : string) {
         this.hash = bundleHash;
-        this.totalSpend = 0;
-        this.inAddresses = new Map<string, string>();
-        this.outAddresses = new Map<string, string>();
-        this.involvedTxs = new Map<string, Tx>();
+        this.timestamp = 0;
+        this.inTxs = [];
+        this.outTxs = [];
+    }
+
+    public SetData(bundle : string, timestamp : number, inTxs : string[], outTxs : string[]) {
+        this.hash = bundle;
+        this.timestamp = timestamp; 
+        this.inTxs = inTxs;
+        this.outTxs = outTxs;
     }
 
     public async Query() : Promise<void>{
@@ -40,19 +42,19 @@ export class involvedBundle {
 
                     //Loop over the Transactions
                     for(let i = 0; i < transactions.length; i++) {
-                        this.involvedTxs.set(transactions[i].hash, {
-                            tag : transactions[i].tag,
-                            addr : transactions[i].address,
-                            value : transactions[i].value,
-                            timestamp : transactions[i].timestamp
-                        });
+
+                        //Update timestamp to latest
+                        this.timestamp = (this.timestamp > transactions[i].timestamp) ? this.timestamp : transactions[i].timestamp;
 
                         //Sort Transactions as in or out
                         if(transactions[i].value > 0) {
-                            this.totalSpend += transactions[i].value;
-                            this.outAddresses.set(transactions[i].address, transactions[i].hash);
+                            //Create the Transactions
+                            let tx = TransactionManager.GetInstance().AddTransaction(this.hash, transactions[i].address, transactions[i].value, transactions[i].tag, transactions[i].hash);
+                            this.outTxs.push(tx.GetTransactionHash());
                         } else {
-                            this.inAddresses.set(transactions[i].address, transactions[i].hash);
+                            //Create the Transactions
+                            let tx = TransactionManager.GetInstance().AddTransaction(transactions[i].address, this.hash, transactions[i].value, transactions[i].tag, transactions[i].hash);
+                            this.inTxs.push(tx.GetTransactionHash());
                         }
                     }
                     resolve();
@@ -63,28 +65,50 @@ export class involvedBundle {
         });
     }
 
+    public GetBundleHash() : string {
+        return this.hash;
+    }
+
     public hasTrinityTag() : boolean {
-        this.involvedTxs.forEach((value) => {
-            if(value.tag.substr(0,7) == "TRINITY") {
+        for(let i=0; i < this.outTxs.length; i++) {
+            if(TransactionManager.GetInstance().GetTransactionItem(this.outTxs[i])?.GetTag().substr(0,7) == "TRINITY") {
                 return true;
             }
-        });
+        }
         return false;
     }
 
-    public GetOutAddresses() : string[] {
-        return Array.from(this.outAddresses.keys());
+    public GetOutTxs() : string[] {
+        return this.outTxs;
+    }
+
+    public GetInTxs() : string[] {
+        return this.inTxs;
     }
 
     public GetInAddresses() : string[] {
-        return Array.from(this.inAddresses.keys());
+        let inAddresses : string[] = [];
+        for(let i=0; i < this.inTxs.length; i++) {
+            let tx = TransactionManager.GetInstance().GetTransactionItem(this.inTxs[i]);
+            if(tx) {
+                inAddresses.push(tx.GetInput());
+            }
+        }
+        return inAddresses;
     }
 
-    public GetTX(addr : string) : Tx|undefined {
-        let Tx = this.inAddresses.get(addr);
-        if(Tx == undefined) {
-            Tx = this.outAddresses.get(addr);
+    public GetOutAddresses() : string[] {
+        let outAddresses : string[] = [];
+        for(let i=0; i < this.outTxs.length; i++) {
+            let tx = TransactionManager.GetInstance().GetTransactionItem(this.outTxs[i]);
+            if(tx) {
+                outAddresses.push(tx.GetOutput());
+            }
         }
-        return (Tx != undefined)?this.involvedTxs.get(Tx):undefined;
+        return outAddresses;
+    }
+
+    public GetTimestamp() : number {
+        return this.timestamp;
     }
 }
