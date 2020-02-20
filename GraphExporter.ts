@@ -26,9 +26,8 @@ function valueLabel(value : number) : string {
 }
 
 function timestampLabel(timestamp : number) : string {
-    let date = new Date();
-    date.setDate(timestamp);
-    return date.toLocaleString();
+    let date = new Date(timestamp * 1000);
+    return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }
 
 export class GraphExporter {

@@ -1,5 +1,5 @@
-export const maxTryCount = 5;
-export const maxQueryDepth = 100;
+export const maxTryCount = 8;
+export const maxQueryDepth = 1000;
 
 export const ProviderList = [
     "https://nodes.iota.org:443",
@@ -15,4 +15,4 @@ export const ProviderList = [
 ];
 
 export const StartAddresses = [
-    "TAKSJLXNRBVCTEMCRI9YIIHJCRGOVMLDYHCJ9BGHDNMINKFVVHPRWRMJMRWBNEMOCZDSYHHHTH9UPYUQD" ];
+    "VLUT9LKIVKZFQSMKF9JANXSSIWXNHIJENUZO9OWTJBXLYJNVOQOHQPPYVDBQBYFWSYSUMKFPR9RSMKEAYXOTJHIZFZ" ];
