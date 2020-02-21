@@ -7,8 +7,8 @@ import { TransactionManager } from "./TransactionManager";
 const fs = require('fs');
 
 export namespace DatabaseManager {
-    export function ImportFromCSV(filename : string) {
-        let name = "Database/" + filename + ".csv";
+    export function ImportFromCSV(folder : string, filename : string) {
+        let name = folder + "/" + filename + ".csv";
         if(fs.existsSync(name)) {
             fs.readFile(name, function(err : Error, data : Buffer) {
                 if(err) console.log("Error reading file " + filename + ":" + err);

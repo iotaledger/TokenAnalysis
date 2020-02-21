@@ -41,7 +41,6 @@ export class GraphExporter {
         this.addresses = new Map<string,involvedAddress>();
         this.bundles = new Map<string, involvedBundle>();
         this.edges = new Map<string, involvedTransaction>();
-
     }
 
     public AddAll() {
@@ -150,7 +149,7 @@ export class GraphExporter {
         });
     }
 
-    public ExportToCSV() {
+    public ExportToCSV(folder : string) {
         //Initialize
         let fileString = "";
 
@@ -186,7 +185,7 @@ export class GraphExporter {
         });
 
         //Store to File
-        fs.writeFile("Database/" + this.name + ".csv", fileString, (err : Error) => {
+        fs.writeFile( folder + "/" + this.name + ".csv", fileString, (err : Error) => {
             if(err) console.log("Error writing file: " + this.name + ":" + err);
             else {
                 console.log("Succesfully saved " + this.name);
