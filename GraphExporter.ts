@@ -79,7 +79,7 @@ export class GraphExporter {
                 }
             }
             //Remove addresses we already processed and duplicates
-            addressesToCheck.filter((addr, index) => {
+            addressesToCheck = addressesToCheck.filter((addr, index) => {
                 return !this.addresses.has(addr) && addressesToCheck.indexOf(addr) === index;
             });
         }
@@ -191,5 +191,48 @@ export class GraphExporter {
                 console.log("Succesfully saved " + this.name);
             }
         });
+    }
+
+    public ExportAllTransactionHashes(folder : string) {
+        this.ExportArrayToFile(Array.from(this.edges.keys()), "txhashes", folder);
+    }
+
+
+    public ExportAllBundleHashes(folder : string) {
+        this.ExportArrayToFile(Array.from(this.bundles.keys()), "bundlehashes", folder);
+    }
+
+    public ExportAllAddressHashes(folder : string) {
+        this.ExportArrayToFile(Array.from(this.addresses.keys()), "addrhashes", folder);
+    }
+
+    public ExportAllUnspentAddressHashes(folder : string) {
+        //Filters addresses that are spent and gets all hashes
+        let addresses = Array.from(this.addresses.values()).filter((value : involvedAddress) => {
+            return !value.IsSpent();
+        }).map((value : involvedAddress) => { return value.GetAddressHash()});
+        this.ExportArrayToFile(addresses, "unspentaddrhashes", folder);
+    }
+
+    private ExportArrayToFile(data : string[], itemname : string, folder : string) {
+        let fileString = "";
+        for(let i=0; i<data.length;i++) {
+            fileString = fileString.concat(data[i] + "\n");
+        }
+        let name = folder + "/" + itemname + "_" + this.name + ".txt";
+        fs.writeFile(name , fileString, (err : Error) => {
+            if(err) console.log("Error writing file: " + name + ":" + err);
+            else {
+                console.log("Succesfully saved " + name);
+            }
+        });
+    }
+
+    public GetUnspentValue() : number {
+        let unspentValue : number = 0;
+        Array.from(this.addresses.values()).filter((value : involvedAddress) => {
+            return !value.IsSpent();
+        }).map((value : involvedAddress) => { unspentValue += value.GetCurrentValue()});;
+        return unspentValue;
     }
 }

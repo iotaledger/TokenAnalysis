@@ -26,6 +26,11 @@ async function ExecuteCommands() {
     exporter.AddAll();
     exporter.ExportToDOT();
     exporter.ExportToCSV("Database");
+    exporter.ExportAllTransactionHashes("Database");
+    exporter.ExportAllBundleHashes("Database");
+    exporter.ExportAllAddressHashes("Database");
+    exporter.ExportAllUnspentAddressHashes("Database");
+    console.log("Unspent value in end addresses: " + exporter.GetUnspentValue());
 }
 
 /*function LoadInitialAddresses() {
