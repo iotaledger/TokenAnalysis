@@ -17,7 +17,7 @@ export class BundleManager {
         this.bundles.set(bundle.GetBundleHash(), bundle);
     }
 
-    public async AddBundle(bundleHash : string, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
+    public async AddBundle(bundleHash : string, loadDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true) : Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
             //Load the Bundles
             if(!this.bundles.has(bundleHash)) {
@@ -25,7 +25,8 @@ export class BundleManager {
                 bundle.Query()
                 .then(() => {
                     //Add Bundle to the list
-                    this.bundles.set(bundleHash, bundle);                    
+                    if(store)
+                        this.bundles.set(bundleHash, bundle);                    
 
                     //Return the next addresses to process
                     if(loadDirection == DIRECTION.FORWARD) {

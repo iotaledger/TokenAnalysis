@@ -30,13 +30,21 @@ function timestampLabel(timestamp : number) : string {
     return date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }
 
+function colorLabel(renderColor : string|undefined) : string {
+    let colorString = "";
+    if(renderColor) {
+        colorString = ", style=filled, color=\"" + renderColor + "\"";
+    } 
+    return colorString;
+}
+
 export class GraphExporter {
     private addresses : Map<string, involvedAddress>;
     private bundles : Map<string, involvedBundle>;
     private edges : Map<string, involvedTransaction>;
     private name : string;
 
-    constructor(name : string) {
+    constructor(name : string, inputColor : string = "#eda151", renderColor : string = "#4bf2b5") {
         this.name = name;
         this.addresses = new Map<string,involvedAddress>();
         this.bundles = new Map<string, involvedBundle>();
@@ -72,8 +80,6 @@ export class GraphExporter {
                         if(outBundle && !this.bundles.has(outBundles[k])) {
                             this.bundles.set(outBundles[k], outBundle);
                             addressesToCheck = addressesToCheck.concat(outBundle.GetOutAddresses());
-                        } else {
-                            console.log("Unknown or duplicate");
                         }
                     }
                 }
@@ -106,14 +112,18 @@ export class GraphExporter {
         let fileString : string = "";
 
         //Opening
-        fileString = fileString.concat("digraph " + this.name + " {\n");
+        fileString = fileString.concat("digraph \"" + this.name + "\" {\n");
         fileString = fileString.concat("rankdir=LR;\n");
+
+        //Render all Starting Addresses
+
+
 
         //Define all addresses without balance
         fileString = fileString.concat("node [shape=box]\n");
         this.addresses.forEach((value : involvedAddress, key : string) =>{
             if(value.IsSpent()) {
-                fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." +  key.substr(key.length-3,3) + "\"]\n");
+                fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." +  key.substr(key.length-3,3) + "\" "+colorLabel(undefined)+"]\n");
             }
         });
 
@@ -128,7 +138,7 @@ export class GraphExporter {
         //Define all bundles
         fileString = fileString.concat("node [shape=ellipse, style=unfilled, color=\"black\"]\n");
         this.bundles.forEach((value : involvedBundle, key : string) => {
-            fileString = fileString.concat("\"" + key + "\"[label=\"" + timestampLabel(value.GetTimestamp()) + "\"]\n");
+            fileString = fileString.concat("\"" + key + "\"[label=\"" + timestampLabel(value.GetTimestamp()) + "\""+colorLabel(undefined)+"]\n");
         });
 
         //Add all edges
@@ -188,7 +198,7 @@ export class GraphExporter {
         fs.writeFile( folder + "/" + this.name + ".csv", fileString, (err : Error) => {
             if(err) console.log("Error writing file: " + this.name + ":" + err);
             else {
-                console.log("Succesfully saved " + this.name);
+                //console.log("Succesfully saved " + this.name);
             }
         });
     }
@@ -196,7 +206,6 @@ export class GraphExporter {
     public ExportAllTransactionHashes(folder : string) {
         this.ExportArrayToFile(Array.from(this.edges.keys()), "txhashes", folder);
     }
-
 
     public ExportAllBundleHashes(folder : string) {
         this.ExportArrayToFile(Array.from(this.bundles.keys()), "bundlehashes", folder);

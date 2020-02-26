@@ -1,6 +1,5 @@
 import { Query, GetInclusionStates } from "./query";
 import { Transaction } from "@iota/core";
-import { BundleManager } from "./BundleManager";
 import { TransactionManager } from "./TransactionManager";
 
 export class involvedAddress {
@@ -118,6 +117,3 @@ export class involvedAddress {
         return this.timestamp;
     }
 }
-
-//Bundle Manager
-//Destination - Receiver Addresses

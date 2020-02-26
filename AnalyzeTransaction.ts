@@ -1,49 +1,78 @@
 import { maxQueryDepth, command } from "./settings";
 import { AddressManager } from "./AddressManager";
 import { BundleManager } from "./BundleManager";
-import { DIRECTION } from "./query";
+import { DIRECTION, getBundle } from "./query";
 import { GraphExporter } from "./GraphExporter";
 import { DatabaseManager } from "./DatabaseManager";
+import { RenderType } from "./GraphToQuery";
+import { Graph } from "./Graph";
+import { SubGraph } from "./SubGraph";
 
-//Init
+//Execution of the script
+ExecuteCommands();
+
 async function ExecuteCommands() {
-    //Query Commands
-    DatabaseManager.ImportFromCSV("Database", command.name);
-    //Convert Bundle commands into addresses
-    command.addressesToSearch = command.addressesToSearch.concat(await QueryBundles(command.bundlesToSearch));
-    for(let i=0; i < command.addressesToSearch.length; i++){ 
-        DatabaseManager.ImportFromCSV("Cache", command.addressesToSearch[i]);
-        await QueryAddress(command.addressesToSearch[i]);
+    //Create the total Graph
+    let combinedGraph : Graph = new Graph(command.name);
 
-        //Cache Results
-        let cacheExporter = new GraphExporter(command.addressesToSearch[i]);
-        cacheExporter.AddAddressSubGraph(command.addressesToSearch[i]);
-        cacheExporter.ExportToCSV("Cache");
+
+    for(let k=0; k < command.graphs.length; k++) {
+        //Create the subgraph
+        let graph = command.graphs[k];
+        let subGraph : SubGraph = new SubGraph(graph.name, graph.inputColor, graph.renderColor);
+
+        //Convert Transaction commands into bundles
+        graph.bundlesToSearch = graph.bundlesToSearch.concat(await QueryTransactions(graph.TxsToSearch));
+        
+        //Convert Bundle commands into addresses
+        graph.addressesToSearch = graph.addressesToSearch.concat(await QueryBundles(graph.bundlesToSearch, DIRECTION.BACKWARD, false));
+        for(let i=0; i < graph.addressesToSearch.length; i++){ 
+            DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
+            await QueryAddress(graph.addressesToSearch[i]);
+
+            //Cache Results
+            let cacheExporter = new GraphExporter(graph.addressesToSearch[i]);
+            cacheExporter.AddAddressSubGraph(graph.addressesToSearch[i]);
+            cacheExporter.ExportToCSV("Cache");
+
+            //Add to Subgraph
+            subGraph.AddAddress(graph.addressesToSearch[i]);
+        }
+
+        //Export commands
+        //let exporter = new GraphExporter(graph.name);
+        //exporter.AddAll();
+        //Export(exporter);
+        //console.log("Unspent value in end addresses from "+graph.name+": " + exporter.GetUnspentValue());
+
+        //Add Subgraph to main graph and optionally render
+        if(command.seperateRender) {
+            subGraph.ExportToDOT();
+        }
+        if(graph.renderType == RenderType.ADD) {
+            combinedGraph.SubGraphAddition(subGraph);
+        } else if (graph.renderType == RenderType.SUBTRACT) {
+            combinedGraph.SubGraphSubtraction(subGraph);
+        }
     }
 
-    //Export commands
-    let exporter = new GraphExporter(command.name);
-    exporter.AddAll();
-    exporter.ExportToDOT();
-    exporter.ExportToCSV("Database");
-    exporter.ExportAllTransactionHashes("Database");
-    exporter.ExportAllBundleHashes("Database");
-    exporter.ExportAllAddressHashes("Database");
-    exporter.ExportAllUnspentAddressHashes("Database");
-    console.log("Unspent value in end addresses: " + exporter.GetUnspentValue());
+    //Combined
+    combinedGraph.ExportToDOT();
 }
 
-/*function LoadInitialAddresses() {
-    let addr = StartAddresses[0];
-    DatabaseManager.ImportFromCSV(addr);
-    QueryAddress(addr)
-    .then(() => {
-        let exporter = new GraphExporter(addr);
-        exporter.AddAll();
-        exporter.ExportToDOT();
-        exporter.ExportToCSV();
-    });
-}*/
+async function QueryTransactions(txs : string[]) : Promise<string[]> {
+    let promises : Promise<void>[] = [];
+    let bundles : string[] = [];
+    for(let i=0; i <txs.length; i++) {
+        promises.push(getBundle(txs[i])
+        .then((bundle : string) => {
+            bundles.push(bundle);
+        })
+        .catch((err : Error) => { console.log("QueryTx error") }));
+    }
+    await Promise.all(promises);
+    return bundles;
+}
 
 async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTION.FORWARD) {
     //Variables
@@ -56,6 +85,10 @@ async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTIO
         nextAddressesToQuery = [];
         let addrPromises : Promise<void>[] = [];
         let bundlePromises : Promise<void>[] = [];
+
+        //Log Queue
+        if(counter)
+            console.log("Queue on iter "+counter+": " + JSON.stringify(nextAddressesToQuery));
 
         //Loop over all addresses
         for(let i=0; i < addressesToQuery.length; i++) {
@@ -73,22 +106,20 @@ async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTIO
         //Wait for all Addresses to finish
         await Promise.all(addrPromises);
         await Promise.all(bundlePromises);
-        console.log("Iterration " + counter);
-        console.log(JSON.stringify(nextAddressesToQuery));
 
         //Increment Depth
         counter++;
     }
 }
 
-async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
+async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true) : Promise<string[]> {
     return new Promise<string[]>(async (resolve, reject) => {
         //Loop over the Bundles
         let nextAddressesToQuery : string[] = [];
         let bundlePromise : Promise<void>[] = [];
         for(let k = 0; k < bundles.length; k++) {
             //Query the Bundles
-            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], queryDirection)
+            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], queryDirection, store)
             .then((addresses : string[]) => {
                 nextAddressesToQuery = nextAddressesToQuery.concat(addresses);
             })
@@ -106,6 +137,21 @@ async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIR
     });
 }
 
-ExecuteCommands();
-
+function Export(exporter : GraphExporter) {
+    if(command.seperateRender) {
+        exporter.ExportToDOT();
+    }
+    if(command.outputAllAddresses) {
+        exporter.ExportAllAddressHashes("Database");
+    }
+    if(command.outputAllBundles) {
+        exporter.ExportAllBundleHashes("Database");
+    }
+    if(command.outputAllTxs) {
+        exporter.ExportAllTransactionHashes("Database");
+    }
+    if(command.outputAllPositiveAddresses) {
+        exporter.ExportAllUnspentAddressHashes("Database");
+    }
+}
 

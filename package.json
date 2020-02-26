@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@iota/converter": "^1.0.0-beta.23",
     "@iota/core": "^1.0.0-beta.29",
     "iota.lib.js": "^0.5.2",
     "ts-node": "^8.6.2"
