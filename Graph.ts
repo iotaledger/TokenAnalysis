@@ -43,6 +43,26 @@ export class Graph {
                 this.bundles[k].delete(key);
             }
         });
+        //Add edge addresses for nicer render
+        let edgeAddresses = new Map<string, involvedAddress>();
+        subgraph.GetAddresses().forEach((value : involvedAddress, key :string) => {
+            let inBundles = value.GetInBundles();
+            inbundles: for(let m=0; m < inBundles.length; m++) {
+                for(let k=0; k < this.bundles.length; k++) {
+                    if(this.bundles[k].has(inBundles[m])) {
+                        edgeAddresses.set(key, value);
+                        break inbundles;
+                    }
+                }
+            }
+        });
+        if(edgeAddresses.size > 0) {
+            this.addressess.push(edgeAddresses);
+            this.bundles.push(new Map<string, involvedBundle>());
+            this.outputColors.push(subgraph.GetEndpointColor());
+            this.renderColors.push(subgraph.GetRenderColor());
+        }
+
         this.calculateEdges();
     }
 

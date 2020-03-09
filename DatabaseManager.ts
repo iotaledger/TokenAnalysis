@@ -89,7 +89,6 @@ export namespace DatabaseManager {
         //Render all Ending Addresses
         for(let i=0; i < subgraphcount; i++) {
             fileString = fileString.concat("node [shape=box " + colorLabel(outputColors[i]) + "]\n");
-            console.log(addresses[i].size);
             addresses[i].forEach((value : involvedAddress, key :string) => {
                 if(!value.IsSpent()) {
                     fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." +  key.substr(key.length-3,3) + "\"]\n");
@@ -111,7 +110,7 @@ export namespace DatabaseManager {
         for(let i=0; i < subgraphcount; i++) {
             fileString = fileString.concat("node [shape=ellipse " + colorLabel(renderColors[i]) + "]\n");
             bundles[i].forEach((value : involvedBundle, key :string) => {
-                fileString = fileString.concat("\"" + key + "\"[label=\"" + timestampLabel(value.GetTimestamp()) + "\"]\n");
+                fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." + key.substr(key.length-3,3) + "\n " + timestampLabel(value.GetTimestamp()) + "\"]\n");
             });
         }
 

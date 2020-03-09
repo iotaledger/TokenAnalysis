@@ -37,7 +37,15 @@ export class BundleManager {
                 })
                 .catch((err : Error) => reject(err));
             } else {
-                resolve([]);
+                if(!store) {
+                    if(loadDirection == DIRECTION.FORWARD) {
+                        resolve(this.bundles.get(bundleHash)?.GetOutAddresses());
+                    } else if(loadDirection == DIRECTION.BACKWARD) {
+                        resolve(this.bundles.get(bundleHash)?.GetInAddresses());
+                    }
+                } else {
+                    resolve([]);
+                }
             }
         });
     }

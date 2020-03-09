@@ -1,7 +1,7 @@
 import { maxQueryDepth, command } from "./settings";
 import { AddressManager } from "./AddressManager";
 import { BundleManager } from "./BundleManager";
-import { DIRECTION, getBundle } from "./query";
+import { DIRECTION, getReceivingAddress } from "./query";
 import { GraphExporter } from "./GraphExporter";
 import { DatabaseManager } from "./DatabaseManager";
 import { RenderType } from "./GraphToQuery";
@@ -22,7 +22,7 @@ async function ExecuteCommands() {
         let subGraph : SubGraph = new SubGraph(graph.name, graph.inputColor, graph.renderColor);
 
         //Convert Transaction commands into bundles
-        graph.bundlesToSearch = graph.bundlesToSearch.concat(await QueryTransactions(graph.TxsToSearch));
+        graph.addressesToSearch = graph.addressesToSearch.concat(await QueryTransactions(graph.TxsToSearch));
         
         //Convert Bundle commands into addresses
         graph.addressesToSearch = graph.addressesToSearch.concat(await QueryBundles(graph.bundlesToSearch, DIRECTION.BACKWARD, false));
@@ -62,16 +62,16 @@ async function ExecuteCommands() {
 
 async function QueryTransactions(txs : string[]) : Promise<string[]> {
     let promises : Promise<void>[] = [];
-    let bundles : string[] = [];
+    let addresses : string[] = [];
     for(let i=0; i <txs.length; i++) {
-        promises.push(getBundle(txs[i])
+        promises.push(getReceivingAddress(txs[i])
         .then((bundle : string) => {
-            bundles.push(bundle);
+            addresses.push(bundle);
         })
         .catch((err : Error) => { console.log("QueryTx error") }));
     }
     await Promise.all(promises);
-    return bundles;
+    return addresses;
 }
 
 async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTION.FORWARD) {
@@ -88,7 +88,7 @@ async function QueryAddress(addr : string, queryDirection : DIRECTION = DIRECTIO
 
         //Log Queue
         if(counter)
-            console.log("Queue on iter "+counter+": " + JSON.stringify(nextAddressesToQuery));
+            console.log("Queue on iter "+counter+": " + JSON.stringify(addressesToQuery));
 
         //Loop over all addresses
         for(let i=0; i < addressesToQuery.length; i++) {
@@ -128,11 +128,12 @@ async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIR
         //Wait for all Bundles to finish
         await Promise.all(bundlePromise);
 
-        //Filter out addresses already loaded before and duplicates
-        nextAddressesToQuery = nextAddressesToQuery.filter((addr, index) => {
-            return (AddressManager.GetInstance().GetAddressItem(nextAddressesToQuery[index])==undefined && nextAddressesToQuery.indexOf(addr) === index);
-        });
-
+        //Filter out addresses already loaded before and duplicates - but only when we don't explore
+        if(store) {
+            nextAddressesToQuery = nextAddressesToQuery.filter((addr, index) => {
+                return (AddressManager.GetInstance().GetAddressItem(nextAddressesToQuery[index])==undefined && nextAddressesToQuery.indexOf(addr) === index);
+            });
+        }
         resolve(nextAddressesToQuery);
     });
 }

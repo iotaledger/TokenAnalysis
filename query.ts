@@ -75,14 +75,14 @@ async function _GetInclusionStates(transactions : string[], iota : any) : Promis
     });
 }
 
-export async function getBundle(transactions : string) : Promise<string> {
+export async function getReceivingAddress(transactions : string) : Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
         for(let i=0; i < maxTryCount; i++) {
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
             let iota = composeAPI({provider : provider});
             try {
                 let result = await iota.getTransactionObjects(<readonly string[]>[transactions]);
-                resolve(result[0].bundle);
+                resolve(result[0].address);
                 return;
             }
             catch(err) {
