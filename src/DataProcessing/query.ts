@@ -1,4 +1,4 @@
-import { maxTryCount, ProviderList } from "./settings";
+import { maxTryCount, ProviderList } from "../settings";
 import { composeAPI, Bundle, Transaction } from "@iota/core";
 import {  } from "@iota/converter";
 

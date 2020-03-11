@@ -1,4 +1,4 @@
-export class involvedTransaction {
+export class Transaction {
     private input : string;
     private output : string;
     private value : number;

@@ -1,24 +1,24 @@
-import { involvedAddress } from "./involvedAddress";
-import { involvedBundle } from "./involvedBundle";
-import { involvedTransaction } from "./involvedTransaction";
-import { TransactionManager } from "./TransactionManager";
-import { AddressManager } from "./AddressManager";
-import { BundleManager } from "./BundleManager";
-import { DatabaseManager } from "./DatabaseManager";
+import { Address } from "../Address/Address";
+import { Bundle } from "../Bundle/Bundle";
+import { Transaction } from "../Transactions/Transaction";
+import { TransactionManager } from "../Transactions/TransactionManager";
+import { AddressManager } from "../Address/AddressManager";
+import { BundleManager } from "../Bundle/BundleManager";
+import { DatabaseManager } from "../DataProcessing/DatabaseManager";
 
 export class SubGraph {
-    private addresses : Map<string, involvedAddress>;
-    private bundles : Map<string, involvedBundle>;
-    private edges : Map<string, involvedTransaction>;
+    private addresses : Map<string, Address>;
+    private bundles : Map<string, Bundle>;
+    private edges : Map<string, Transaction>;
     private name : string;
     private endpointColor ?: string;
     private renderColor ?: string;
 
     constructor(name : string, endpointColor : string = "#eda151", renderColor : string = "#4bf2b5") {
         this.name = name;
-        this.addresses = new Map<string,involvedAddress>();
-        this.bundles = new Map<string, involvedBundle>();
-        this.edges = new Map<string, involvedTransaction>();
+        this.addresses = new Map<string,Address>();
+        this.bundles = new Map<string, Bundle>();
+        this.edges = new Map<string, Transaction>();
         this.endpointColor = endpointColor;
         this.renderColor = renderColor;
     }
@@ -42,7 +42,7 @@ export class SubGraph {
             for(let i=0; i < currentAddresses.length; i++) {
                 let inMemAddr = AddressManager.GetInstance().GetAddressItem(currentAddresses[i]);
                 if(inMemAddr) {
-                    inMemAddr = <involvedAddress>inMemAddr;
+                    inMemAddr = <Address>inMemAddr;
                     this.addresses.set(currentAddresses[i], inMemAddr);
                     //Loop over the Bundles
                     let outBundles = inMemAddr.GetOutBundles();
@@ -72,7 +72,7 @@ export class SubGraph {
     private calculateEdges() {
         //Create a list of edges
         const transactions = TransactionManager.GetInstance().GetTransactions();
-        transactions.forEach((value : involvedTransaction, key : string) => {
+        transactions.forEach((value : Transaction, key : string) => {
             //Check if the nodes are included
             let inputHash = value.GetInput();
             let outputHash = value.GetOutput();
@@ -82,15 +82,15 @@ export class SubGraph {
         });
     }
 
-    public GetAddresses() : Map<string,involvedAddress> {
+    public GetAddresses() : Map<string,Address> {
         return this.addresses;
     }
 
-    public GetBundles() : Map<string, involvedBundle> {
+    public GetBundles() : Map<string, Bundle> {
         return this.bundles;
     }
 
-    public GetEdges() : Map<string, involvedTransaction> {
+    public GetEdges() : Map<string, Transaction> {
         return this.edges;
     }
 

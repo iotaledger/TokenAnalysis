@@ -1,8 +1,8 @@
-import { Query, GetInclusionStates } from "./query";
+import { Query, GetInclusionStates } from "../DataProcessing/query";
 import { Transaction } from "@iota/core";
-import { TransactionManager } from "./TransactionManager";
+import { TransactionManager } from "../Transactions/TransactionManager";
 
-export class involvedAddress {
+export class Address {
     private addr : string;
     private timestamp : number;
     private currentValue : number;

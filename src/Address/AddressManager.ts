@@ -1,17 +1,16 @@
-import { involvedAddress } from "./involvedAddress";
-import { BundleManager } from "./BundleManager";
-import { DIRECTION } from "./query";
+import { Address } from "./Address";
+import { DIRECTION } from "../DataProcessing/query";
 
 
 export class AddressManager {
     private static instance : AddressManager;
-    private addresses : Map<string, involvedAddress>;
+    private addresses : Map<string, Address>;
 
     private constructor() {
-        this.addresses = new Map<string, involvedAddress>();
+        this.addresses = new Map<string, Address>();
     }
 
-    public LoadAddress(addr : involvedAddress) {
+    public LoadAddress(addr : Address) {
         this.addresses.set(addr.GetAddressHash(), addr);
     }
 
@@ -19,7 +18,7 @@ export class AddressManager {
         return new Promise<string[]>( async (resolve, reject) => {
             //Load the Addresses
             if(!this.addresses.has(addr)) {
-                let newAddr : involvedAddress = new involvedAddress(addr);
+                let newAddr : Address = new Address(addr);
                 newAddr.Query()
                 .then(() => {
                     //Add Address to the list
@@ -47,11 +46,11 @@ export class AddressManager {
         return this.instance;
     }
 
-    public GetAddressItem(addr : string) : involvedAddress|undefined {
+    public GetAddressItem(addr : string) : Address|undefined {
         return this.addresses.get(addr);
     }
 
-    public GetAddresses() : Map<string,involvedAddress> {
+    public GetAddresses() : Map<string,Address> {
         return this.addresses;
     }
 }

@@ -1,9 +1,9 @@
-import { involvedAddress } from "./involvedAddress";
-import { involvedBundle } from "./involvedBundle";
-import { AddressManager } from "./AddressManager";
-import { BundleManager } from "./BundleManager";
-import { TransactionManager } from "./TransactionManager";
-import { involvedTransaction } from "./involvedTransaction";
+import { Address } from "../Address/Address";
+import { Bundle } from "../Bundle/Bundle";
+import { AddressManager } from "../Address/AddressManager";
+import { BundleManager } from "../Bundle/BundleManager";
+import { TransactionManager } from "../Transactions/TransactionManager";
+import { Transaction } from "../Transactions/Transaction";
 
 const fs = require('fs');
 
@@ -57,12 +57,12 @@ export namespace DatabaseManager {
                             TransactionManager.GetInstance().AddTransaction(singleDatapoints[2], singleDatapoints[3], parseInt(singleDatapoints[4]), singleDatapoints[5], singleDatapoints[1]);
                         } else if(singleDatapoints[0] == "addr") {
                              //Address Loading
-                            let newAddress : involvedAddress = new involvedAddress(singleDatapoints[1]);
+                            let newAddress = new Address(singleDatapoints[1]);
                             newAddress.SetData(singleDatapoints[1], parseInt(singleDatapoints[2]), parseInt(singleDatapoints[3]), JSON.parse(singleDatapoints[4]), JSON.parse(singleDatapoints[5]));
                             AddressManager.GetInstance().LoadAddress(newAddress);
                         } else if(singleDatapoints[0] == "bundle") {
                             //Bundle Loading
-                            let newBundle : involvedBundle = new involvedBundle(singleDatapoints[1]);
+                            let newBundle : Bundle = new Bundle(singleDatapoints[1]);
                             newBundle.SetData(singleDatapoints[1], parseInt(singleDatapoints[2]), JSON.parse(singleDatapoints[3]), JSON.parse(singleDatapoints[4]));
                             BundleManager.GetInstance().LoadBundle(newBundle);
                         }
@@ -72,7 +72,7 @@ export namespace DatabaseManager {
         }
     }
 
-    export function ExportToDOT(filename : string, addresses : Map<string, involvedAddress>[], bundles : Map<string, involvedBundle>[], edges : Map<string, involvedTransaction>, outputColors : (string|undefined)[], renderColors : (string|undefined)[]) {
+    export function ExportToDOT(filename : string, addresses : Map<string, Address>[], bundles : Map<string, Bundle>[], edges : Map<string, Transaction>, outputColors : (string|undefined)[], renderColors : (string|undefined)[]) {
         let name = "DOT/" + filename  + ".gv";
 
         //Loop over the subgraphs
@@ -89,7 +89,7 @@ export namespace DatabaseManager {
         //Render all Ending Addresses
         for(let i=0; i < subgraphcount; i++) {
             fileString = fileString.concat("node [shape=box " + colorLabel(outputColors[i]) + "]\n");
-            addresses[i].forEach((value : involvedAddress, key :string) => {
+            addresses[i].forEach((value : Address, key :string) => {
                 if(!value.IsSpent()) {
                     fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." +  key.substr(key.length-3,3) + "\"]\n");
                 }
@@ -99,7 +99,7 @@ export namespace DatabaseManager {
         //Render the other Addresses
         for(let i=0; i < subgraphcount; i++) {
             fileString = fileString.concat("node [shape=box " + colorLabel(renderColors[i]) + "]\n");
-            addresses[i].forEach((value : involvedAddress, key :string) => {
+            addresses[i].forEach((value : Address, key :string) => {
                 if(value.IsSpent()) {
                     fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." +  key.substr(key.length-3,3) + "\"]\n");
                 }
@@ -109,13 +109,13 @@ export namespace DatabaseManager {
         //Render the Bundles
         for(let i=0; i < subgraphcount; i++) {
             fileString = fileString.concat("node [shape=ellipse " + colorLabel(renderColors[i]) + "]\n");
-            bundles[i].forEach((value : involvedBundle, key :string) => {
+            bundles[i].forEach((value : Bundle, key :string) => {
                 fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." + key.substr(key.length-3,3) + "\n " + timestampLabel(value.GetTimestamp()) + "\"]\n");
             });
         }
 
         //Render the edges
-        edges.forEach((value : involvedTransaction, key :string) => {
+        edges.forEach((value : Transaction, key :string) => {
             fileString = fileString.concat("\"" + value.GetInput() + "\" -> \"" + value.GetOutput() + "\"");
             fileString = fileString.concat("[label=\""+ valueLabel(value.GetValue()) +"\"];\n")
         });

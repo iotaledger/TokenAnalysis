@@ -2,20 +2,22 @@
   "name": "attackfundsanalysis",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./out/src/index.js",
+  "typings": "typings/src",
   "scripts": {
-    "start": "ts-node AnalyzeTransaction.ts"
+    "build" : "tsc",
+    "start": "ts-node ./src/AnalyzeTransaction.ts"
   },
-  "author": "",
+  "author": "Jelle Millenaar (Jelle.millenaar@iota.org)",
   "license": "ISC",
   "dependencies": {
     "@iota/converter": "^1.0.0-beta.23",
     "@iota/core": "^1.0.0-beta.29",
-    "iota.lib.js": "^0.5.2",
-    "ts-node": "^8.6.2"
+    "iota.lib.js": "^0.5.2"
   },
   "devDependencies": {
     "@types/node": "^13.7.1",
+    "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   }
 }

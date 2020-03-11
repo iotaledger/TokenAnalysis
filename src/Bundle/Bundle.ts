@@ -1,10 +1,7 @@
-import { Query, GetInclusionStates } from "./query";
-import { AddressManager } from "./AddressManager";
-import { TransactionManager } from "./TransactionManager";
-import { involvedTransaction } from "./involvedTransaction";
-import { involvedAddress } from "./involvedAddress";
+import { Query, GetInclusionStates } from "../DataProcessing/query";
+import { TransactionManager } from "../Transactions/TransactionManager";
 
-export class involvedBundle {
+export class Bundle {
     private hash : string;
     private timestamp : number;
     private inTxs : string[];

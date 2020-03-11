@@ -1,19 +1,15 @@
-import { involvedBundle } from "./involvedBundle";
-import { AddressManager } from "./AddressManager";
-import { DIRECTION } from "./query";
-import { involvedTransaction } from "./involvedTransaction";
-import { TransactionManager } from "./TransactionManager";
-
+import { Bundle } from "./Bundle";
+import { DIRECTION } from "../DataProcessing/query";
 
 export class BundleManager {
     private static instance : BundleManager;
-    private bundles : Map<string, involvedBundle>;
+    private bundles : Map<string, Bundle>;
 
     private constructor() {
-        this.bundles = new Map<string, involvedBundle>();
+        this.bundles = new Map<string, Bundle>();
     }
 
-    public LoadBundle(bundle : involvedBundle) {
+    public LoadBundle(bundle : Bundle) {
         this.bundles.set(bundle.GetBundleHash(), bundle);
     }
 
@@ -21,7 +17,7 @@ export class BundleManager {
         return new Promise<string[]>((resolve, reject) => {
             //Load the Bundles
             if(!this.bundles.has(bundleHash)) {
-                let bundle : involvedBundle = new involvedBundle(bundleHash);
+                let bundle : Bundle = new Bundle(bundleHash);
                 bundle.Query()
                 .then(() => {
                     //Add Bundle to the list
@@ -58,11 +54,11 @@ export class BundleManager {
         return this.instance;
     }
 
-    public GetBundleItem(bundleHash : string) : involvedBundle|undefined {
+    public GetBundleItem(bundleHash : string) : Bundle|undefined {
         return this.bundles.get(bundleHash);
     }
 
-    public GetBundles() : Map<string, involvedBundle> {
+    public GetBundles() : Map<string, Bundle> {
         return this.bundles;
     }
 }

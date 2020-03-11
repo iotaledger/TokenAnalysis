@@ -1,9 +1,9 @@
-import { AddressManager } from "./AddressManager";
-import { involvedAddress } from "./involvedAddress";
-import { BundleManager } from "./BundleManager";
-import { involvedBundle } from "./involvedBundle";
-import { involvedTransaction } from "./involvedTransaction";
-import { TransactionManager } from "./TransactionManager";
+import { AddressManager } from "../Address/AddressManager";
+import { Address } from "../Address/Address";
+import { BundleManager } from "../Bundle/BundleManager";
+import { Bundle } from "../Bundle/Bundle";
+import { Transaction } from "../Transactions/Transaction";
+import { TransactionManager } from "../Transactions/TransactionManager";
 const fs = require('fs');
 
 function valueLabel(value : number) : string {
@@ -39,16 +39,16 @@ function colorLabel(renderColor : string|undefined) : string {
 }
 
 export class GraphExporter {
-    private addresses : Map<string, involvedAddress>;
-    private bundles : Map<string, involvedBundle>;
-    private edges : Map<string, involvedTransaction>;
+    private addresses : Map<string, Address>;
+    private bundles : Map<string, Bundle>;
+    private edges : Map<string, Transaction>;
     private name : string;
 
     constructor(name : string, inputColor : string = "#eda151", renderColor : string = "#4bf2b5") {
         this.name = name;
-        this.addresses = new Map<string,involvedAddress>();
-        this.bundles = new Map<string, involvedBundle>();
-        this.edges = new Map<string, involvedTransaction>();
+        this.addresses = new Map<string,Address>();
+        this.bundles = new Map<string, Bundle>();
+        this.edges = new Map<string, Transaction>();
     }
 
     public AddAll() {
@@ -70,7 +70,7 @@ export class GraphExporter {
             for(let i=0; i < currentAddresses.length; i++) {
                 let inMemAddr = AddressManager.GetInstance().GetAddressItem(currentAddresses[i]);
                 if(inMemAddr) {
-                    inMemAddr = <involvedAddress>inMemAddr;
+                    inMemAddr = <Address>inMemAddr;
                     this.addresses.set(currentAddresses[i], inMemAddr);
                     //Loop over the Bundles
                     let outBundles = inMemAddr.GetOutBundles();
@@ -96,7 +96,7 @@ export class GraphExporter {
     private calculateEdges() {
         //Create a list of edges
         const transactions = TransactionManager.GetInstance().GetTransactions();
-        transactions.forEach((value : involvedTransaction, key : string) => {
+        transactions.forEach((value : Transaction, key : string) => {
             //Check if the nodes are included
             let inputHash = value.GetInput();
             let outputHash = value.GetOutput();
@@ -121,7 +121,7 @@ export class GraphExporter {
 
         //Define all addresses without balance
         fileString = fileString.concat("node [shape=box]\n");
-        this.addresses.forEach((value : involvedAddress, key : string) =>{
+        this.addresses.forEach((value : Address, key : string) =>{
             if(value.IsSpent()) {
                 fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." +  key.substr(key.length-3,3) + "\" "+colorLabel(undefined)+"]\n");
             }
@@ -129,7 +129,7 @@ export class GraphExporter {
 
         //Render all addresses with balance
         fileString = fileString.concat("node [style=filled, color=\"green\"]\n");
-        this.addresses.forEach((value : involvedAddress, key : string) =>{
+        this.addresses.forEach((value : Address, key : string) =>{
             if(!value.IsSpent()) {
                 fileString = fileString.concat("\"" + key + "\"[label=\"" + key.substr(0,3) + "..." + key.substr(key.length-3,3) + "\\n"+ valueLabel(value.GetCurrentValue()) +"\"]\n");
             }
@@ -137,12 +137,12 @@ export class GraphExporter {
 
         //Define all bundles
         fileString = fileString.concat("node [shape=ellipse, style=unfilled, color=\"black\"]\n");
-        this.bundles.forEach((value : involvedBundle, key : string) => {
+        this.bundles.forEach((value : Bundle, key : string) => {
             fileString = fileString.concat("\"" + key + "\"[label=\"" + timestampLabel(value.GetTimestamp()) + "\""+colorLabel(undefined)+"]\n");
         });
 
         //Add all edges
-        this.edges.forEach((value : involvedTransaction, key : string ) => {
+        this.edges.forEach((value : Transaction, key : string ) => {
             fileString = fileString.concat("\"" + value.GetInput() + "\" -> \"" + value.GetOutput() + "\"");
             fileString = fileString.concat("[label=\""+ valueLabel(value.GetValue()) +"\"];\n")
         });
@@ -164,12 +164,12 @@ export class GraphExporter {
         let fileString = "";
 
         //Save Transactions
-        this.edges.forEach((value : involvedTransaction, key : string) => {
+        this.edges.forEach((value : Transaction, key : string) => {
             fileString = fileString.concat("tx;" + key + ";" + value.GetInput() + ';' + value.GetOutput() + ";" + value.GetValue() + ";" + value.GetTag() + "\n");
         });
 
         //Save Addresses
-        this.addresses.forEach((value : involvedAddress, key : string) => {
+        this.addresses.forEach((value : Address, key : string) => {
             //Initial Values
             fileString = fileString.concat("addr;" + key + ";" + value.GetTimestamp() + ";" + value.GetCurrentValue());
             
@@ -182,7 +182,7 @@ export class GraphExporter {
         });
 
         //Save Bundles
-        this.bundles.forEach((value : involvedBundle, key : string) => {
+        this.bundles.forEach((value : Bundle, key : string) => {
             //Initial Values
             fileString = fileString.concat("bundle;" + key + ";" + value.GetTimestamp());
 
@@ -217,9 +217,9 @@ export class GraphExporter {
 
     public ExportAllUnspentAddressHashes(folder : string) {
         //Filters addresses that are spent and gets all hashes
-        let addresses = Array.from(this.addresses.values()).filter((value : involvedAddress) => {
+        let addresses = Array.from(this.addresses.values()).filter((value : Address) => {
             return !value.IsSpent();
-        }).map((value : involvedAddress) => { return value.GetAddressHash()});
+        }).map((value : Address) => { return value.GetAddressHash()});
         this.ExportArrayToFile(addresses, "unspentaddrhashes", folder);
     }
 
@@ -239,9 +239,9 @@ export class GraphExporter {
 
     public GetUnspentValue() : number {
         let unspentValue : number = 0;
-        Array.from(this.addresses.values()).filter((value : involvedAddress) => {
+        Array.from(this.addresses.values()).filter((value : Address) => {
             return !value.IsSpent();
-        }).map((value : involvedAddress) => { unspentValue += value.GetCurrentValue()});;
+        }).map((value : Address) => { unspentValue += value.GetCurrentValue()});;
         return unspentValue;
     }
 }

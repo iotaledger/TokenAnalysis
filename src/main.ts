@@ -1,24 +1,23 @@
 import { maxQueryDepth, command } from "./settings";
-import { AddressManager } from "./AddressManager";
-import { BundleManager } from "./BundleManager";
-import { DIRECTION, getReceivingAddress } from "./query";
-import { GraphExporter } from "./GraphExporter";
-import { DatabaseManager } from "./DatabaseManager";
-import { RenderType } from "./GraphToQuery";
-import { Graph } from "./Graph";
-import { SubGraph } from "./SubGraph";
+import { AddressManager } from "./Address/AddressManager";
+import { BundleManager } from "./Bundle/BundleManager";
+import { DIRECTION, getReceivingAddress } from "./DataProcessing/query";
+import { GraphExporter } from "./DataProcessing/GraphExporter";
+import { DatabaseManager } from "./DataProcessing/DatabaseManager";
+import { RenderType, Settings } from "./DataProcessing/GraphToQuery";
+import { Graph } from "./Graph/Graph";
+import { SubGraph } from "./Graph/SubGraph";
 
 //Execution of the script
-ExecuteCommands();
+GenerateGraph(command);
 
-async function ExecuteCommands() {
+export async function GenerateGraph( settings : Settings ) {
     //Create the total Graph
-    let combinedGraph : Graph = new Graph(command.name);
+    let combinedGraph : Graph = new Graph(settings.name);
 
-
-    for(let k=0; k < command.graphs.length; k++) {
+    for(let k=0; k < settings.graphs.length; k++) {
         //Create the subgraph
-        let graph = command.graphs[k];
+        let graph = settings.graphs[k];
         let subGraph : SubGraph = new SubGraph(graph.name, graph.inputColor, graph.renderColor);
 
         //Convert Transaction commands into bundles
@@ -46,7 +45,7 @@ async function ExecuteCommands() {
         //console.log("Unspent value in end addresses from "+graph.name+": " + exporter.GetUnspentValue());
 
         //Add Subgraph to main graph and optionally render
-        if(command.seperateRender) {
+        if(settings.seperateRender) {
             subGraph.ExportToDOT();
         }
         if(graph.renderType == RenderType.ADD) {
