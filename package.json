@@ -6,7 +6,7 @@
   "typings": "typings/src",
   "scripts": {
     "build" : "tsc",
-    "start": "ts-node ./src/AnalyzeTransaction.ts"
+    "start": "ts-node ./src/main.ts"
   },
   "author": "Jelle Millenaar (Jelle.millenaar@iota.org)",
   "license": "ISC",
