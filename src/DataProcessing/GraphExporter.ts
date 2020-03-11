@@ -115,10 +115,6 @@ export class GraphExporter {
         fileString = fileString.concat("digraph \"" + this.name + "\" {\n");
         fileString = fileString.concat("rankdir=LR;\n");
 
-        //Render all Starting Addresses
-
-
-
         //Define all addresses without balance
         fileString = fileString.concat("node [shape=box]\n");
         this.addresses.forEach((value : Address, key : string) =>{

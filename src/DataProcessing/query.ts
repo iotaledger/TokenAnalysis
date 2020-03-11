@@ -16,6 +16,7 @@ export interface QueryRequest {
 
 export async function Query(request : QueryRequest) : Promise<Transaction[]> {
     return new Promise<Transaction[]>(async (resolve, reject) => {
+        console.log("Query called: " +  JSON.stringify(request));
         for(let i=0; i < maxTryCount; i++) {
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
             let iota = composeAPI({provider : provider});
