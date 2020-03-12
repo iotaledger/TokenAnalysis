@@ -5,7 +5,7 @@
   "main": "./out/src/index.js",
   "typings": "typings/src",
   "scripts": {
-    "build" : "tsc",
+    "build": "tsc",
     "start": "ts-node ./src/main.ts",
     "trace": "ts-node ./src/LiveTrace.ts"
   },
@@ -17,6 +17,7 @@
     "iota.lib.js": "^0.5.2"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.30",
     "@types/node": "^13.7.1",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
