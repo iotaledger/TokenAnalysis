@@ -32,6 +32,9 @@ var SubGraph = /** @class */ (function () {
     SubGraph.prototype.ExportToDOT = function () {
         DatabaseManager_1.DatabaseManager.ExportToDOT(this.name, [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
     };
+    SubGraph.prototype.GetDOTString = function () {
+        return DatabaseManager_1.DatabaseManager.ExportToDOT("", [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
+    };
     SubGraph.prototype.GetAddresses = function () {
         var addrs = new Map();
         this.paths.forEach(function (value, key) {

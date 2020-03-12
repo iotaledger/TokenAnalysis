@@ -112,13 +112,16 @@ var DatabaseManager;
         //Closing
         fileString = fileString.concat("}");
         //Write to file
-        fs.writeFile(name, fileString, function (err) {
-            if (err)
-                console.log("Error writing file: " + name + ":" + err);
-            else {
-                //console.log("Succesfully saved " + name);
-            }
-        });
+        if (name.length) {
+            fs.writeFile(name, fileString, function (err) {
+                if (err)
+                    console.log("Error writing file: " + name + ":" + err);
+                else {
+                    //console.log("Succesfully saved " + name);
+                }
+            });
+        }
+        return fileString;
     }
     DatabaseManager.ExportToDOT = ExportToDOT;
 })(DatabaseManager = exports.DatabaseManager || (exports.DatabaseManager = {}));

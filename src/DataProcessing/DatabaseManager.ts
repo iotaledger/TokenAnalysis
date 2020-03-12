@@ -68,7 +68,7 @@ export namespace DatabaseManager {
         }
     }
 
-    export function ExportToDOT(filename : string, addresses : Map<string, Address>[], bundles : Map<string, Bundle>[], edges : Map<string, Transaction>, outputColors : (string|undefined)[], renderColors : (string|undefined)[]) {
+    export function ExportToDOT(filename : string, addresses : Map<string, Address>[], bundles : Map<string, Bundle>[], edges : Map<string, Transaction>, outputColors : (string|undefined)[], renderColors : (string|undefined)[]) : string {
         let name = "DOT/" + filename  + ".gv";
 
         //Loop over the subgraphs
@@ -120,11 +120,15 @@ export namespace DatabaseManager {
         fileString = fileString.concat("}");
 
         //Write to file
-        fs.writeFile(name, fileString, (err : Error) => {
-            if(err) console.log("Error writing file: " + name + ":" + err);
-            else {
-                //console.log("Succesfully saved " + name);
-            }
-        });
+        if(name.length) {
+            fs.writeFile(name, fileString, (err : Error) => {
+                if(err) console.log("Error writing file: " + name + ":" + err);
+                else {
+                    //console.log("Succesfully saved " + name);
+                }
+            });
+        }
+
+        return fileString;
     }
 }

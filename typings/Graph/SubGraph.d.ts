@@ -10,6 +10,7 @@ export declare class SubGraph {
     AddAddress(addr: string): void;
     UpdateAddresses(): void;
     ExportToDOT(): void;
+    GetDOTString(): string;
     GetAddresses(): Map<string, Address>;
     GetBundles(): Map<string, Bundle>;
     GetEdges(): Map<string, Transaction>;

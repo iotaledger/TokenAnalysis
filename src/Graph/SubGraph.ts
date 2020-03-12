@@ -35,6 +35,10 @@ export class SubGraph {
         DatabaseManager.ExportToDOT(this.name, [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
     }
 
+    public GetDOTString() : string {
+        return DatabaseManager.ExportToDOT("", [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
+    }
+
     public GetAddresses() : Map<string,Address> {
         let addrs = new Map<string, Address>();
         this.paths.forEach((value : Path, key : string) => {
