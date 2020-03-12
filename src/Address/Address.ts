@@ -76,7 +76,7 @@ export class Address {
     }
 
     public IsSpent() : boolean {
-        return (this.currentValue == 0);
+        return (this.currentValue <= 0);
     }
 
     public GetCurrentValue() : number {

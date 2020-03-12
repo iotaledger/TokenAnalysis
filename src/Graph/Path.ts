@@ -5,6 +5,7 @@ import { TransactionManager } from "../Transactions/TransactionManager";
 import { Transaction } from "../Transactions/Transaction";
 import { Bundle } from "../Bundle/Bundle";
 
+
 export class Path {
     private originalAddress : string;
     private addresses : Map<string, Address>;
@@ -63,6 +64,7 @@ export class Path {
         }
 
         this.calculateEdges();
+        
     }
 
     private calculateEdges() {

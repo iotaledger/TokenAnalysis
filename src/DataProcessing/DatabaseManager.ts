@@ -75,7 +75,7 @@ export namespace DatabaseManager {
         let subgraphcount = Math.min(addresses.length, bundles.length, outputColors.length, renderColors.length);
 
         //Initialize the data
-        console.log("Started writing to " + name);
+        //console.log("Started writing to " + name);
         let fileString : string = "";
 
         //Opening
@@ -123,7 +123,7 @@ export namespace DatabaseManager {
         fs.writeFile(name, fileString, (err : Error) => {
             if(err) console.log("Error writing file: " + name + ":" + err);
             else {
-                console.log("Succesfully saved " + name);
+                //console.log("Succesfully saved " + name);
             }
         });
     }

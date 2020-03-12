@@ -49,7 +49,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
         //Loop over all addresses
         for(let i=0; i < addressesToQuery.length; i++) {
             //Query the Addresses
-            addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], queryDirection)
+            addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], true, queryDirection)
             .then(async (newBundles : string[]) => {
                 bundlePromises.push(QueryBundles(newBundles, queryDirection)
                 .then((nextAddresses : string[]) => {
@@ -75,7 +75,7 @@ export async function QueryBundles(bundles : string[], queryDirection : DIRECTIO
         let bundlePromise : Promise<void>[] = [];
         for(let k = 0; k < bundles.length; k++) {
             //Query the Bundles
-            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], queryDirection, store)
+            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], true, queryDirection, store)
             .then((addresses : string[]) => {
                 nextAddressesToQuery = nextAddressesToQuery.concat(addresses);
             })
@@ -96,7 +96,6 @@ export async function QueryBundles(bundles : string[], queryDirection : DIRECTIO
 
 export async function Query(request : QueryRequest) : Promise<Transaction[]> {
     return new Promise<Transaction[]>(async (resolve, reject) => {
-        console.log("Query called: " +  JSON.stringify(request));
         for(let i=0; i < maxTryCount; i++) {
             let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
             let iota = composeAPI({provider : provider});

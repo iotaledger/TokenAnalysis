@@ -14,10 +14,10 @@ export class AddressManager {
         this.addresses.set(addr.GetAddressHash(), addr);
     }
 
-    public async AddAddress(addr : string, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
+    public async AddAddress(addr : string, refresh : boolean = false, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
         return new Promise<string[]>( async (resolve, reject) => {
             //Load the Addresses
-            if(!this.addresses.has(addr)) {
+            if(!this.addresses.has(addr) || refresh) {
                 let newAddr : Address = new Address(addr);
                 newAddr.Query()
                 .then(() => {

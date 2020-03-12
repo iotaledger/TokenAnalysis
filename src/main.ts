@@ -25,17 +25,20 @@ export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
             //Convert Bundle commands into addresses
             graph.addressesToSearch = graph.addressesToSearch.concat(await QueryBundles(graph.bundlesToSearch, DIRECTION.BACKWARD, false));
             for(let i=0; i < graph.addressesToSearch.length; i++){ 
-                DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
+                //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
                 await QueryAddress(graph.addressesToSearch[i], maxQueryDepth);
 
                 //Cache Results
-                let cacheExporter = new GraphExporter(graph.addressesToSearch[i]);
-                cacheExporter.AddAddressSubGraph(graph.addressesToSearch[i]);
-                cacheExporter.ExportToCSV("Cache");
+                //let cacheExporter = new GraphExporter(graph.addressesToSearch[i]);
+                //cacheExporter.AddAddressSubGraph(graph.addressesToSearch[i]);
+                //cacheExporter.ExportToCSV("Cache");
 
                 //Add to Subgraph
                 subGraph.AddAddress(graph.addressesToSearch[i]);
             }
+
+            subGraph.ExportAllUnspentAddressHashes("Database");
+            subGraph.ExportAllTransactionHashes("Database");
 
             //Export commands
             //let exporter = new GraphExporter(graph.name);

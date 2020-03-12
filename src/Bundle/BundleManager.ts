@@ -13,10 +13,10 @@ export class BundleManager {
         this.bundles.set(bundle.GetBundleHash(), bundle);
     }
 
-    public async AddBundle(bundleHash : string, loadDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true) : Promise<string[]> {
+    public async AddBundle(bundleHash : string, refresh : boolean = false, loadDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true) : Promise<string[]> {
         return new Promise<string[]>((resolve, reject) => {
             //Load the Bundles
-            if(!this.bundles.has(bundleHash)) {
+            if(!this.bundles.has(bundleHash) || refresh) {
                 let bundle : Bundle = new Bundle(bundleHash);
                 bundle.Query()
                 .then(() => {
