@@ -11,4 +11,5 @@ export declare class Graph {
     SubGraphSubtraction(subgraph: SubGraph): void;
     private calculateEdges;
     ExportToDOT(): void;
+    GetDOTString(): string;
 }

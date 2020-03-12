@@ -93,4 +93,8 @@ export class Graph {
     public ExportToDOT() {
         DatabaseManager.ExportToDOT(this.name, this.addressess, this.bundles, this.edges, this.outputColors, this.renderColors);
     }
+
+    public GetDOTString() : string {
+        return DatabaseManager.ExportToDOT("", this.addressess, this.bundles, this.edges, this.outputColors, this.renderColors);
+    }
 }

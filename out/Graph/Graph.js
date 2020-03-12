@@ -85,6 +85,9 @@ var Graph = /** @class */ (function () {
     Graph.prototype.ExportToDOT = function () {
         DatabaseManager_1.DatabaseManager.ExportToDOT(this.name, this.addressess, this.bundles, this.edges, this.outputColors, this.renderColors);
     };
+    Graph.prototype.GetDOTString = function () {
+        return DatabaseManager_1.DatabaseManager.ExportToDOT("", this.addressess, this.bundles, this.edges, this.outputColors, this.renderColors);
+    };
     return Graph;
 }());
 exports.Graph = Graph;
