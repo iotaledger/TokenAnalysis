@@ -1,7 +1,6 @@
 import { maxQueryDepth, command } from "./settings";
 import { DIRECTION, QueryAddress, QueryBundles, QueryTransactions } from "./DataProcessing/query";
 import { GraphExporter } from "./DataProcessing/GraphExporter";
-import { DatabaseManager } from "./DataProcessing/DatabaseManager";
 import { RenderType, Settings } from "./DataProcessing/GraphToQuery";
 import { Graph } from "./Graph/Graph";
 import { SubGraph } from "./Graph/SubGraph";

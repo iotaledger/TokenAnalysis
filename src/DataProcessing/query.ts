@@ -49,7 +49,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
         //Loop over all addresses
         for(let i=0; i < addressesToQuery.length; i++) {
             //Query the Addresses
-            addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], true, queryDirection)
+            addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
             .then(async (newBundles : string[]) => {
                 bundlePromises.push(QueryBundles(newBundles, queryDirection)
                 .then((nextAddresses : string[]) => {
@@ -75,7 +75,7 @@ export async function QueryBundles(bundles : string[], queryDirection : DIRECTIO
         let bundlePromise : Promise<void>[] = [];
         for(let k = 0; k < bundles.length; k++) {
             //Query the Bundles
-            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], true, queryDirection, store)
+            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], undefined, queryDirection, store)
             .then((addresses : string[]) => {
                 nextAddressesToQuery = nextAddressesToQuery.concat(addresses);
             })
