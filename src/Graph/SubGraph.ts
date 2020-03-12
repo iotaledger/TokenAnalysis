@@ -1,97 +1,61 @@
 import { Address } from "../Address/Address";
 import { Bundle } from "../Bundle/Bundle";
 import { Transaction } from "../Transactions/Transaction";
-import { TransactionManager } from "../Transactions/TransactionManager";
-import { AddressManager } from "../Address/AddressManager";
-import { BundleManager } from "../Bundle/BundleManager";
 import { DatabaseManager } from "../DataProcessing/DatabaseManager";
+import { Path } from "./Path";
 
 export class SubGraph {
-    private addresses : Map<string, Address>;
-    private bundles : Map<string, Bundle>;
-    private edges : Map<string, Transaction>;
+    private paths : Map<string, Path>;
     private name : string;
     private endpointColor ?: string;
     private renderColor ?: string;
 
     constructor(name : string, endpointColor : string = "#eda151", renderColor : string = "#4bf2b5") {
+        this.paths = new Map<string, Path>();
         this.name = name;
-        this.addresses = new Map<string,Address>();
-        this.bundles = new Map<string, Bundle>();
-        this.edges = new Map<string, Transaction>();
         this.endpointColor = endpointColor;
         this.renderColor = renderColor;
-    }
-
-    public AddAll() {
-        //Store all
-        this.addresses = AddressManager.GetInstance().GetAddresses();
-        this.bundles = BundleManager.GetInstance().GetBundles();
-        this.calculateEdges();
+        
     }
 
     public AddAddress(addr : string) {
-        let addressesToCheck : string[] = [addr];
-
-        //Create a List of all nodes (Addresses & Bundles)
-        while(addressesToCheck.length) {
-            const currentAddresses = [...addressesToCheck];
-            addressesToCheck = [];
-
-            //Loop over the addresses
-            for(let i=0; i < currentAddresses.length; i++) {
-                let inMemAddr = AddressManager.GetInstance().GetAddressItem(currentAddresses[i]);
-                if(inMemAddr) {
-                    inMemAddr = <Address>inMemAddr;
-                    this.addresses.set(currentAddresses[i], inMemAddr);
-                    //Loop over the Bundles
-                    let outBundles = inMemAddr.GetOutBundles();
-                    for(let k=0; k < outBundles.length; k++) {
-                        let outBundle = BundleManager.GetInstance().GetBundleItem(outBundles[k]);
-                        //Prevent adding unknowns and duplicates
-                        if(outBundle && !this.bundles.has(outBundles[k])) {
-                            this.bundles.set(outBundles[k], outBundle);
-                            addressesToCheck = addressesToCheck.concat(outBundle.GetOutAddresses());
-                        }
-                    }
-                }
-            }
-            //Remove addresses we already processed and duplicates
-            addressesToCheck = addressesToCheck.filter((addr, index) => {
-                return !this.addresses.has(addr) && addressesToCheck.indexOf(addr) === index;
-            });
+        if( !this.paths.has(addr) ) {
+            this.paths.set(addr, new Path(addr));
         }
-
-        this.calculateEdges();
     }
 
-    public ExportToDOT() {
-        DatabaseManager.ExportToDOT(this.name, [this.addresses], [this.bundles], this.edges, [this.endpointColor], [this.renderColor]);
-    }
-
-    private calculateEdges() {
-        //Create a list of edges
-        const transactions = TransactionManager.GetInstance().GetTransactions();
-        transactions.forEach((value : Transaction, key : string) => {
-            //Check if the nodes are included
-            let inputHash = value.GetInput();
-            let outputHash = value.GetOutput();
-            if((this.addresses.has(inputHash) || this.bundles.has(inputHash)) && (this.addresses.has(outputHash) || this.bundles.has(outputHash))) {
-                this.edges.set(key, value);
-            }
+    public UpdateAddresses() {
+        this.paths.forEach((value : Path, key : string) => {
+            value.UpdateEndpoints();
         });
     }
 
+    public ExportToDOT() {
+        DatabaseManager.ExportToDOT(this.name, [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
+    }
+
     public GetAddresses() : Map<string,Address> {
-        return this.addresses;
+        let addrs = new Map<string, Address>();
+        this.paths.forEach((value : Path, key : string) => {
+            addrs = new Map<string, Address>([...Array.from(addrs.entries()), ...Array.from(value.GetAddresses())]);
+        });
+        return addrs;
     }
 
     public GetBundles() : Map<string, Bundle> {
-        return this.bundles;
+        let bundles = new Map<string, Bundle>();
+        this.paths.forEach((value : Path, key : string) => {
+            bundles = new Map<string, Bundle>([...Array.from(bundles.entries()), ...Array.from(value.GetBundles())]);
+        });
+        return bundles;
     }
 
     public GetEdges() : Map<string, Transaction> {
-        return this.edges;
+        let edges = new Map<string, Transaction>();
+        this.paths.forEach((value : Path, key : string) => {
+            edges = new Map<string, Transaction>([...Array.from(edges.entries()), ...Array.from(value.GetTransactions())]);
+        });
+        return edges;
     }
 
     public GetEndpointColor() : string | undefined {
