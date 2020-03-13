@@ -30,7 +30,7 @@ export async function QueryTransactions(txs : string[]) : Promise<string[]> {
     return addresses;
 }
 
-export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD) {
+export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD, refresh : boolean = false) {
     //Variables
     let nextAddressesToQuery : string[] = [addr];
     let counter = 0;
@@ -49,7 +49,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
         //Loop over all addresses
         for(let i=0; i < addressesToQuery.length; i++) {
             //Query the Addresses
-            addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
+            addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
             .then(async (newBundles : string[]) => {
                 bundlePromises.push(QueryBundles(newBundles, queryDirection)
                 .then((nextAddresses : string[]) => {
@@ -68,7 +68,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
     }
 }
 
-export async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true) : Promise<string[]> {
+export async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true, refresh : boolean = false) : Promise<string[]> {
     return new Promise<string[]>(async (resolve, reject) => {
         //Loop over the Bundles
         let nextAddressesToQuery : string[] = [];

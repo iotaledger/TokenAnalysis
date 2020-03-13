@@ -78,8 +78,9 @@ function QueryTransactions(txs) {
     });
 }
 exports.QueryTransactions = QueryTransactions;
-function QueryAddress(addr, maxQueryDepth, queryDirection) {
+function QueryAddress(addr, maxQueryDepth, queryDirection, refresh) {
     if (queryDirection === void 0) { queryDirection = DIRECTION.FORWARD; }
+    if (refresh === void 0) { refresh = false; }
     return __awaiter(this, void 0, void 0, function () {
         var nextAddressesToQuery, counter, _loop_1;
         var _this = this;
@@ -103,7 +104,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection) {
                                     //Loop over all addresses
                                     for (i = 0; i < addressesToQuery.length; i++) {
                                         //Query the Addresses
-                                        addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
+                                        addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
                                             .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
                                             return __generator(this, function (_a) {
                                                 bundlePromises.push(QueryBundles(newBundles, queryDirection)
@@ -143,9 +144,10 @@ function QueryAddress(addr, maxQueryDepth, queryDirection) {
     });
 }
 exports.QueryAddress = QueryAddress;
-function QueryBundles(bundles, queryDirection, store) {
+function QueryBundles(bundles, queryDirection, store, refresh) {
     if (queryDirection === void 0) { queryDirection = DIRECTION.FORWARD; }
     if (store === void 0) { store = true; }
+    if (refresh === void 0) { refresh = false; }
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
         return __generator(this, function (_a) {
