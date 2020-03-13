@@ -107,7 +107,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh) {
                                         addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
                                             .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
                                             return __generator(this, function (_a) {
-                                                bundlePromises.push(QueryBundles(newBundles, queryDirection)
+                                                bundlePromises.push(QueryBundles(newBundles, queryDirection, undefined, refresh)
                                                     .then(function (nextAddresses) {
                                                     nextAddressesToQuery = nextAddressesToQuery.concat(nextAddresses);
                                                 })
@@ -160,7 +160,7 @@ function QueryBundles(bundles, queryDirection, store, refresh) {
                                 bundlePromise = [];
                                 for (k = 0; k < bundles.length; k++) {
                                     //Query the Bundles
-                                    bundlePromise.push(BundleManager_1.BundleManager.GetInstance().AddBundle(bundles[k], undefined, queryDirection, store)
+                                    bundlePromise.push(BundleManager_1.BundleManager.GetInstance().AddBundle(bundles[k], refresh, queryDirection, store)
                                         .then(function (addresses) {
                                         nextAddressesToQuery = nextAddressesToQuery.concat(addresses);
                                     })
