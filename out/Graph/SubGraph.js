@@ -19,9 +19,10 @@ var SubGraph = /** @class */ (function () {
         this.endpointColor = endpointColor;
         this.renderColor = renderColor;
     }
-    SubGraph.prototype.AddAddress = function (addr) {
+    SubGraph.prototype.AddAddress = function (addr, maxDepth) {
+        if (maxDepth === void 0) { maxDepth = 1000; }
         if (!this.paths.has(addr)) {
-            this.paths.set(addr, new Path_1.Path(addr));
+            this.paths.set(addr, new Path_1.Path(addr, maxDepth));
         }
     };
     SubGraph.prototype.UpdateAddresses = function () {

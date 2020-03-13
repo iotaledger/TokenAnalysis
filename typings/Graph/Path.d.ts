@@ -6,7 +6,7 @@ export declare class Path {
     private addresses;
     private bundles;
     private edges;
-    constructor(addr: string);
+    constructor(addr: string, maxDepth?: number);
     UpdateEndpoints(): void;
     private AddAddrToPath;
     private calculateEdges;

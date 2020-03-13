@@ -19,9 +19,9 @@ export class SubGraph {
         
     }
 
-    public AddAddress(addr : string) {
+    public AddAddress(addr : string, maxDepth : number = 1000) {
         if( !this.paths.has(addr) ) {
-            this.paths.set(addr, new Path(addr));
+            this.paths.set(addr, new Path(addr, maxDepth));
         }
     }
 
