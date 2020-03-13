@@ -140,7 +140,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh) {
                                                 //Increment Depth
                                                 counter++;
                                                 if (counter == maxQueryDepth) {
-                                                    endPoints = endPoints.concat(nextAddressesToQuery);
+                                                    endPoints = endPoints.concat(addressesToQuery);
                                                 }
                                                 return [2 /*return*/];
                                         }

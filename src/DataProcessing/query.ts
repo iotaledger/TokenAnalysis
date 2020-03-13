@@ -73,7 +73,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
             //Increment Depth
             counter++;
             if(counter == maxQueryDepth) {
-                endPoints = endPoints.concat(nextAddressesToQuery);
+                endPoints = endPoints.concat(addressesToQuery);
             }
         }
         resolve(endPoints);
