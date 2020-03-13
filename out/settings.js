@@ -26,7 +26,7 @@ exports.command = {
     outputAllAddresses: false,
     outputAllPositiveAddresses: false,
     graphs: [
-        new GraphToQuery_1.GraphToQuery("PH_Subgraph", GraphToQuery_1.RenderType.ADD, "#fcc658", "#ffb621", undefined, Addresses, undefined),
+        new GraphToQuery_1.GraphToQuery("PH_Subgraph", GraphToQuery_1.RenderType.ADD, "#fcc658", "#ffb621", undefined, undefined, Addresses),
     ]
 };
 //# sourceMappingURL=settings.js.map
