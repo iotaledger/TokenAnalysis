@@ -19,7 +19,11 @@ export class BundleManager {
             if(!this.bundles.has(bundleHash) || refresh) {
                 let bundle : Bundle = new Bundle(bundleHash);
                 bundle.Query()
-                .then(() => {
+                .then((exists : boolean) => {
+                    if(!exists) {
+                        resolve([]);
+                        return;
+                    }
                     //Add Bundle to the list
                     if(store)
                         this.bundles.set(bundleHash, bundle);                    

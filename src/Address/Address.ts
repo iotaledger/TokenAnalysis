@@ -25,8 +25,8 @@ export class Address {
         this.outTxs = outTxs;
     }
 
-    public async Query() : Promise<void> {
-        return new Promise<void>(async (resolve, reject) => {
+    public async Query() : Promise<boolean> {
+        return new Promise<boolean>(async (resolve, reject) => {
             Query({addresses:[this.addr]})
             .then((transactions : Transaction[]) => {
                 //Loop over the transactions
@@ -59,7 +59,7 @@ export class Address {
                     }
                     //Log
                     console.log("Processed: " + this.addr);  
-                    resolve();              
+                    resolve((transactions.length > 0));              
                 })
                 .catch((err : Error) => {
                     reject("Error for addr inclusions " + this.addr + ": " + err);

@@ -84,7 +84,7 @@ var Bundle = /** @class */ (function () {
                                         _this.inTxs.push(tx.GetTransactionHash());
                                     }
                                 }
-                                resolve();
+                                resolve((transactions.length > 0));
                             })
                                 .catch(function (err) { return reject(err); });
                         })

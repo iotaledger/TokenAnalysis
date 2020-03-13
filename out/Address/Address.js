@@ -92,7 +92,7 @@ var Address = /** @class */ (function () {
                                     }
                                     //Log
                                     console.log("Processed: " + _this.addr);
-                                    resolve();
+                                    resolve((transactions.length > 0));
                                 })
                                     .catch(function (err) {
                                     reject("Error for addr inclusions " + _this.addr + ": " + err);

@@ -58,7 +58,11 @@ var BundleManager = /** @class */ (function () {
                         if (!_this.bundles.has(bundleHash) || refresh) {
                             var bundle_1 = new Bundle_1.Bundle(bundleHash);
                             bundle_1.Query()
-                                .then(function () {
+                                .then(function (exists) {
+                                if (!exists) {
+                                    resolve([]);
+                                    return;
+                                }
                                 //Add Bundle to the list
                                 if (store)
                                     _this.bundles.set(bundleHash, bundle_1);
