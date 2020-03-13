@@ -69,15 +69,14 @@ var DatabaseManager;
         }
     }
     DatabaseManager.ImportFromCSV = ImportFromCSV;
-    function ExportToDOT(filename, addresses, bundles, edges, outputColors, renderColors) {
-        var name = "DOT/" + filename + ".gv";
+    function GenerateDOT(addresses, bundles, edges, outputColors, renderColors) {
         //Loop over the subgraphs
         var subgraphcount = Math.min(addresses.length, bundles.length, outputColors.length, renderColors.length);
         //Initialize the data
         //console.log("Started writing to " + name);
         var fileString = "";
         //Opening
-        fileString = fileString.concat("digraph \"" + filename + "\" {\n");
+        fileString = fileString.concat("digraph {\n");
         fileString = fileString.concat("rankdir=LR;\n");
         //Render all Ending Addresses
         for (var i = 0; i < subgraphcount; i++) {
@@ -111,6 +110,12 @@ var DatabaseManager;
         });
         //Closing
         fileString = fileString.concat("}");
+        return fileString;
+    }
+    DatabaseManager.GenerateDOT = GenerateDOT;
+    function ExportToDOT(filename, addresses, bundles, edges, outputColors, renderColors) {
+        var name = "DOT/" + filename + ".gv";
+        var fileString = GenerateDOT(addresses, bundles, edges, outputColors, renderColors);
         //Write to file
         if (name.length) {
             fs.writeFile(name, fileString, function (err) {
@@ -121,7 +126,6 @@ var DatabaseManager;
                 }
             });
         }
-        return fileString;
     }
     DatabaseManager.ExportToDOT = ExportToDOT;
 })(DatabaseManager = exports.DatabaseManager || (exports.DatabaseManager = {}));

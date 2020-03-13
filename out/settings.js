@@ -4,7 +4,7 @@ var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 exports.maxTryCount = 8;
 exports.maxQueryDepth = 1000;
 exports.ProviderList = [
-    //"https://nodes.iota.org:443",
+    "https://nodes.iota.org:443",
     "http://bare01.mainnet.iota.cafe:14265",
     "http://bare02.mainnet.iota.cafe:14265",
     "http://bare03.mainnet.iota.cafe:14265",
@@ -15,21 +15,18 @@ exports.ProviderList = [
     "http://iri04.mainnet.iota.cafe:14265",
     "http://iri05.mainnet.iota.cafe:14265"
 ];
-var NewThefts = [
-    "VPDRB9I9WIJA9N9HGEYLPFRDRZH9YRIZIJNZQVPKH9INTCDLTWHD9JNEFFAK9ABVZ9PBEITROFLPLAYAW",
-    "9BHLFKQGEBEESQBNUOEDOKWJEOFKFTFBFIPLEIYQ9KJCIRUHFHNVTOOYSSZIHQTEXXL9GLFBRADUDWJKX",
-    "GUMDQOFUBXLISNJLWFVKAERLIXIMFGIEY9VZFSOIKBJXFTTJOTSKRAJJJKBNCHFPFKUKISHIVNXGTFFEB",
-    "XGAESRZLTFJN9HXVDASKBVSBNGSZKAUBSSRTBFGIGHUEDCJLY9JVIRLISUXRETKWGUZKCFTEWJFFLBSBB"
+var Addresses = [
+    "FEYALUZRP9VVDKUNLUBGBDGHRMYUKLSRGX9HNRVKPT99KDELZHWOHJRATORHNKHVBEWZEWBUAOKNVPFPD"
 ];
 exports.command = {
-    name: "NewThefts",
+    name: "PH_Graph",
     seperateRender: true,
     outputAllTxs: false,
     outputAllBundles: false,
     outputAllAddresses: false,
     outputAllPositiveAddresses: false,
     graphs: [
-        new GraphToQuery_1.GraphToQuery("NewThefts", GraphToQuery_1.RenderType.ADD, "#fcc658", "#ffb621", undefined, NewThefts, undefined),
+        new GraphToQuery_1.GraphToQuery("PH_Subgraph", GraphToQuery_1.RenderType.ADD, "#fcc658", "#ffb621", undefined, Addresses, undefined),
     ]
 };
 //# sourceMappingURL=settings.js.map

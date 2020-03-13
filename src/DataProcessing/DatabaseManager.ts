@@ -68,9 +68,7 @@ export namespace DatabaseManager {
         }
     }
 
-    export function ExportToDOT(filename : string, addresses : Map<string, Address>[], bundles : Map<string, Bundle>[], edges : Map<string, Transaction>, outputColors : (string|undefined)[], renderColors : (string|undefined)[]) : string {
-        let name = "DOT/" + filename  + ".gv";
-
+    export function GenerateDOT(addresses : Map<string, Address>[], bundles : Map<string, Bundle>[], edges : Map<string, Transaction>, outputColors : (string|undefined)[], renderColors : (string|undefined)[]) : string {
         //Loop over the subgraphs
         let subgraphcount = Math.min(addresses.length, bundles.length, outputColors.length, renderColors.length);
 
@@ -79,7 +77,7 @@ export namespace DatabaseManager {
         let fileString : string = "";
 
         //Opening
-        fileString = fileString.concat("digraph \"" + filename + "\" {\n");
+        fileString = fileString.concat("digraph {\n");
         fileString = fileString.concat("rankdir=LR;\n");
 
         //Render all Ending Addresses
@@ -118,6 +116,12 @@ export namespace DatabaseManager {
 
         //Closing
         fileString = fileString.concat("}");
+        return fileString;
+    }
+
+    export function ExportToDOT(filename : string, addresses : Map<string, Address>[], bundles : Map<string, Bundle>[], edges : Map<string, Transaction>, outputColors : (string|undefined)[], renderColors : (string|undefined)[]) {
+        let name = "DOT/" + filename  + ".gv";
+        const fileString = GenerateDOT(addresses, bundles, edges, outputColors, renderColors);
 
         //Write to file
         if(name.length) {
@@ -128,7 +132,5 @@ export namespace DatabaseManager {
                 }
             });
         }
-
-        return fileString;
     }
 }

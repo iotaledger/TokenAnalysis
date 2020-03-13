@@ -36,7 +36,7 @@ export class SubGraph {
     }
 
     public GetDOTString() : string {
-        return DatabaseManager.ExportToDOT("", [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
+        return DatabaseManager.GenerateDOT([this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
     }
 
     public GetAddresses() : Map<string,Address> {
