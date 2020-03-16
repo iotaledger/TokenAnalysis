@@ -57,8 +57,6 @@ export class Address {
                         this.timestamp = (this.timestamp > transactions[i].timestamp) ? this.timestamp : transactions[i].timestamp;
                         this.currentValue += transactions[i].value;
                     }
-                    //Log
-                    console.log("Processed: " + this.addr);  
                     resolve();              
                 })
                 .catch((err : Error) => {

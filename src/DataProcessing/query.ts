@@ -30,21 +30,18 @@ export async function QueryTransactions(txs : string[]) : Promise<string[]> {
     return addresses;
 }
 
-export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD) {
+export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD, callback: (processedTXCount : number, foundTXCount : number, depth : number) => void = () => {}) {
     //Variables
     let nextAddressesToQuery : string[] = [addr];
-    let counter = 0;
+    let depth = 0;
+    let processedTXCount = 0;
 
     //Keep querying until max depth or end found
-    while(nextAddressesToQuery.length && counter < maxQueryDepth) {
+    while(nextAddressesToQuery.length && depth < maxQueryDepth) {
         const addressesToQuery = [...nextAddressesToQuery];
         nextAddressesToQuery = [];
         let addrPromises : Promise<void>[] = [];
         let bundlePromises : Promise<void>[] = [];
-
-        //Log Queue
-        if(counter)
-            console.log("Queue on iter "+counter+": " + JSON.stringify(addressesToQuery));
 
         //Loop over all addresses
         for(let i=0; i < addressesToQuery.length; i++) {
@@ -64,7 +61,11 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
         await Promise.all(bundlePromises);
 
         //Increment Depth
-        counter++;
+        processedTXCount += addressesToQuery.length;
+        depth++;
+
+        //Report intermediate
+        callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
     }
 }
 

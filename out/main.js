@@ -42,7 +42,7 @@ var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 var Graph_1 = require("./Graph/Graph");
 var SubGraph_1 = require("./Graph/SubGraph");
 //Execution of the script
-//GenerateGraph(command);
+GenerateGraph(settings_1.command);
 function GenerateGraph(settings) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
@@ -78,7 +78,9 @@ function GenerateGraph(settings) {
                             case 4:
                                 if (!(i < graph.addressesToSearch.length)) return [3 /*break*/, 7];
                                 //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
-                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], settings_1.maxQueryDepth)];
+                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], settings_1.maxQueryDepth, undefined, function (processedTXCount, foundTXCount, depth) {
+                                        console.log(processedTXCount + "/" + foundTXCount + " with depth " + depth);
+                                    })];
                             case 5:
                                 //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
                                 _g.sent();

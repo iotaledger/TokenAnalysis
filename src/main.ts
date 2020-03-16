@@ -6,7 +6,7 @@ import { Graph } from "./Graph/Graph";
 import { SubGraph } from "./Graph/SubGraph";
 
 //Execution of the script
-//GenerateGraph(command);
+GenerateGraph(command);
 
 export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
     return new Promise<Graph>( async (resolve, reject) => {
@@ -25,7 +25,9 @@ export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
             graph.addressesToSearch = graph.addressesToSearch.concat(await QueryBundles(graph.bundlesToSearch, DIRECTION.BACKWARD, false));
             for(let i=0; i < graph.addressesToSearch.length; i++){ 
                 //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
-                await QueryAddress(graph.addressesToSearch[i], maxQueryDepth);
+                await QueryAddress(graph.addressesToSearch[i], maxQueryDepth, undefined, (processedTXCount:number, foundTXCount : number, depth:number) => {
+                    console.log(processedTXCount + "/" + foundTXCount + " with depth " + depth);
+                });
 
                 //Cache Results
                 //let cacheExporter = new GraphExporter(graph.addressesToSearch[i]);

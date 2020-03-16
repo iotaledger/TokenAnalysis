@@ -90,8 +90,6 @@ var Address = /** @class */ (function () {
                                         _this.timestamp = (_this.timestamp > transactions[i].timestamp) ? _this.timestamp : transactions[i].timestamp;
                                         _this.currentValue += transactions[i].value;
                                     }
-                                    //Log
-                                    console.log("Processed: " + _this.addr);
                                     resolve();
                                 })
                                     .catch(function (err) {

@@ -78,16 +78,18 @@ function QueryTransactions(txs) {
     });
 }
 exports.QueryTransactions = QueryTransactions;
-function QueryAddress(addr, maxQueryDepth, queryDirection) {
+function QueryAddress(addr, maxQueryDepth, queryDirection, callback) {
     if (queryDirection === void 0) { queryDirection = DIRECTION.FORWARD; }
+    if (callback === void 0) { callback = function () { }; }
     return __awaiter(this, void 0, void 0, function () {
-        var nextAddressesToQuery, counter, _loop_1;
+        var nextAddressesToQuery, depth, processedTXCount, _loop_1;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     nextAddressesToQuery = [addr];
-                    counter = 0;
+                    depth = 0;
+                    processedTXCount = 0;
                     _loop_1 = function () {
                         var addressesToQuery, addrPromises, bundlePromises, i;
                         return __generator(this, function (_a) {
@@ -97,9 +99,6 @@ function QueryAddress(addr, maxQueryDepth, queryDirection) {
                                     nextAddressesToQuery = [];
                                     addrPromises = [];
                                     bundlePromises = [];
-                                    //Log Queue
-                                    if (counter)
-                                        console.log("Queue on iter " + counter + ": " + JSON.stringify(addressesToQuery));
                                     //Loop over all addresses
                                     for (i = 0; i < addressesToQuery.length; i++) {
                                         //Query the Addresses
@@ -125,14 +124,17 @@ function QueryAddress(addr, maxQueryDepth, queryDirection) {
                                 case 2:
                                     _a.sent();
                                     //Increment Depth
-                                    counter++;
+                                    processedTXCount += addressesToQuery.length;
+                                    depth++;
+                                    //Report intermediate
+                                    callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
                                     return [2 /*return*/];
                             }
                         });
                     };
                     _a.label = 1;
                 case 1:
-                    if (!(nextAddressesToQuery.length && counter < maxQueryDepth)) return [3 /*break*/, 3];
+                    if (!(nextAddressesToQuery.length && depth < maxQueryDepth)) return [3 /*break*/, 3];
                     return [5 /*yield**/, _loop_1()];
                 case 2:
                     _a.sent();
