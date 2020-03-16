@@ -90,7 +90,7 @@ var Address = /** @class */ (function () {
                                         _this.timestamp = (_this.timestamp > transactions[i].timestamp) ? _this.timestamp : transactions[i].timestamp;
                                         _this.currentValue += transactions[i].value;
                                     }
-                                    resolve();
+                                    resolve((transactions.length > 0));
                                 })
                                     .catch(function (err) {
                                     reject("Error for addr inclusions " + _this.addr + ": " + err);

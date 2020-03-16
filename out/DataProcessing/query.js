@@ -78,76 +78,96 @@ function QueryTransactions(txs) {
     });
 }
 exports.QueryTransactions = QueryTransactions;
-function QueryAddress(addr, maxQueryDepth, queryDirection, callback) {
+function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
     if (queryDirection === void 0) { queryDirection = DIRECTION.FORWARD; }
+    if (refresh === void 0) { refresh = false; }
     if (callback === void 0) { callback = function () { }; }
     return __awaiter(this, void 0, void 0, function () {
-        var nextAddressesToQuery, depth, processedTXCount, _loop_1;
         var _this = this;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    nextAddressesToQuery = [addr];
-                    depth = 0;
-                    processedTXCount = 0;
-                    _loop_1 = function () {
-                        var addressesToQuery, addrPromises, bundlePromises, i;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    addressesToQuery = __spreadArrays(nextAddressesToQuery);
-                                    nextAddressesToQuery = [];
-                                    addrPromises = [];
-                                    bundlePromises = [];
-                                    //Loop over all addresses
-                                    for (i = 0; i < addressesToQuery.length; i++) {
-                                        //Query the Addresses
-                                        addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
-                                            .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                bundlePromises.push(QueryBundles(newBundles, queryDirection)
-                                                    .then(function (nextAddresses) {
-                                                    nextAddressesToQuery = nextAddressesToQuery.concat(nextAddresses);
-                                                })
-                                                    .catch(function (err) { return console.log("Top Bundle Error: " + err); }));
+            return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                    var nextAddressesToQuery, endPoints, depth, processedTXCount, _loop_1;
+                    var _this = this;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                nextAddressesToQuery = [addr];
+                                endPoints = [];
+                                depth = 0;
+                                processedTXCount = 0;
+                                _loop_1 = function () {
+                                    var addressesToQuery, addrPromises, bundlePromises, _loop_2, i;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0:
+                                                addressesToQuery = __spreadArrays(nextAddressesToQuery);
+                                                nextAddressesToQuery = [];
+                                                addrPromises = [];
+                                                bundlePromises = [];
+                                                _loop_2 = function (i) {
+                                                    //Query the Addresses
+                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
+                                                        .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
+                                                        return __generator(this, function (_a) {
+                                                            if (!newBundles.length) {
+                                                                endPoints.push(addressesToQuery[i]);
+                                                            }
+                                                            else {
+                                                                bundlePromises.push(QueryBundles(newBundles, queryDirection, undefined, refresh)
+                                                                    .then(function (nextAddresses) {
+                                                                    nextAddressesToQuery = nextAddressesToQuery.concat(nextAddresses);
+                                                                })
+                                                                    .catch(function (err) { console.log("Top Bundle Error: " + err); reject(); }));
+                                                            }
+                                                            return [2 /*return*/];
+                                                        });
+                                                    }); })
+                                                        .catch(function (err) { console.log("Top Address Error: " + err); reject(); }));
+                                                };
+                                                //Loop over all addresses
+                                                for (i = 0; i < addressesToQuery.length; i++) {
+                                                    _loop_2(i);
+                                                }
+                                                //Wait for all Addresses to finish
+                                                return [4 /*yield*/, Promise.all(addrPromises)];
+                                            case 1:
+                                                //Wait for all Addresses to finish
+                                                _a.sent();
+                                                return [4 /*yield*/, Promise.all(bundlePromises)];
+                                            case 2:
+                                                _a.sent();
+                                                //Increment Depth
+                                                processedTXCount += addressesToQuery.length;
+                                                depth++;
+                                                if (depth == maxQueryDepth) {
+                                                    endPoints = endPoints.concat(addressesToQuery);
+                                                }
+                                                //Report intermediate
+                                                callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
+                                                resolve(endPoints);
                                                 return [2 /*return*/];
-                                            });
-                                        }); })
-                                            .catch(function (err) { return console.log("Top Address Error: " + err); }));
-                                    }
-                                    //Wait for all Addresses to finish
-                                    return [4 /*yield*/, Promise.all(addrPromises)];
-                                case 1:
-                                    //Wait for all Addresses to finish
-                                    _a.sent();
-                                    return [4 /*yield*/, Promise.all(bundlePromises)];
-                                case 2:
-                                    _a.sent();
-                                    //Increment Depth
-                                    processedTXCount += addressesToQuery.length;
-                                    depth++;
-                                    //Report intermediate
-                                    callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
-                                    return [2 /*return*/];
-                            }
-                        });
-                    };
-                    _a.label = 1;
-                case 1:
-                    if (!(nextAddressesToQuery.length && depth < maxQueryDepth)) return [3 /*break*/, 3];
-                    return [5 /*yield**/, _loop_1()];
-                case 2:
-                    _a.sent();
-                    return [3 /*break*/, 1];
-                case 3: return [2 /*return*/];
-            }
+                                        }
+                                    });
+                                };
+                                _a.label = 1;
+                            case 1:
+                                if (!(nextAddressesToQuery.length && depth < maxQueryDepth)) return [3 /*break*/, 3];
+                                return [5 /*yield**/, _loop_1()];
+                            case 2:
+                                _a.sent();
+                                return [3 /*break*/, 1];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); })];
         });
     });
 }
 exports.QueryAddress = QueryAddress;
-function QueryBundles(bundles, queryDirection, store) {
+function QueryBundles(bundles, queryDirection, store, refresh) {
     if (queryDirection === void 0) { queryDirection = DIRECTION.FORWARD; }
     if (store === void 0) { store = true; }
+    if (refresh === void 0) { refresh = false; }
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
         return __generator(this, function (_a) {
@@ -160,7 +180,7 @@ function QueryBundles(bundles, queryDirection, store) {
                                 bundlePromise = [];
                                 for (k = 0; k < bundles.length; k++) {
                                     //Query the Bundles
-                                    bundlePromise.push(BundleManager_1.BundleManager.GetInstance().AddBundle(bundles[k], undefined, queryDirection, store)
+                                    bundlePromise.push(BundleManager_1.BundleManager.GetInstance().AddBundle(bundles[k], refresh, queryDirection, store)
                                         .then(function (addresses) {
                                         nextAddressesToQuery = nextAddressesToQuery.concat(addresses);
                                     })

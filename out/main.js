@@ -78,7 +78,7 @@ function GenerateGraph(settings) {
                             case 4:
                                 if (!(i < graph.addressesToSearch.length)) return [3 /*break*/, 7];
                                 //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
-                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], settings_1.maxQueryDepth, undefined, function (processedTXCount, foundTXCount, depth) {
+                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], settings_1.maxQueryDepth, undefined, undefined, function (processedTXCount, foundTXCount, depth) {
                                         console.log(processedTXCount + "/" + foundTXCount + " with depth " + depth);
                                     })];
                             case 5:

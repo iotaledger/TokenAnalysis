@@ -59,8 +59,12 @@ var AddressManager = /** @class */ (function () {
                             if (!this.addresses.has(addr) || refresh) {
                                 newAddr_1 = new Address_1.Address(addr);
                                 newAddr_1.Query()
-                                    .then(function () {
+                                    .then(function (exists) {
                                     //Add Address to the list
+                                    if (!exists) {
+                                        resolve([]);
+                                        return;
+                                    }
                                     _this.addresses.set(addr, newAddr_1);
                                     //Return the next bundles to process
                                     if (loadDirection == query_1.DIRECTION.FORWARD) {

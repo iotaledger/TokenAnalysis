@@ -20,8 +20,12 @@ export class AddressManager {
             if(!this.addresses.has(addr) || refresh) {
                 let newAddr : Address = new Address(addr);
                 newAddr.Query()
-                .then(() => {
+                .then((exists : boolean) => {
                     //Add Address to the list
+                    if(!exists) {
+                        resolve([]);
+                        return;
+                    }
                     this.addresses.set(addr, newAddr);
 
                     //Return the next bundles to process

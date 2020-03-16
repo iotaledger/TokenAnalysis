@@ -11,13 +11,14 @@ var AddressManager_1 = require("../Address/AddressManager");
 var BundleManager_1 = require("../Bundle/BundleManager");
 var TransactionManager_1 = require("../Transactions/TransactionManager");
 var Path = /** @class */ (function () {
-    function Path(addr) {
+    function Path(addr, maxDepth) {
+        if (maxDepth === void 0) { maxDepth = 1000; }
         this.originalAddress = addr;
         this.addresses = new Map();
         this.bundles = new Map();
         this.edges = new Map();
         //Load initial path
-        this.AddAddrToPath(addr);
+        this.AddAddrToPath(addr, maxDepth);
     }
     Path.prototype.UpdateEndpoints = function () {
         var _this = this;
@@ -28,11 +29,13 @@ var Path = /** @class */ (function () {
             }
         });
     };
-    Path.prototype.AddAddrToPath = function (addr) {
+    Path.prototype.AddAddrToPath = function (addr, maxDepth) {
         var _this = this;
+        if (maxDepth === void 0) { maxDepth = 1000; }
         var addressesToCheck = [addr];
         //Create a List of all nodes (Addresses & Bundles)
-        while (addressesToCheck.length) {
+        var counter = 0;
+        while (addressesToCheck.length && counter < maxDepth) {
             var currentAddresses = __spreadArrays(addressesToCheck);
             addressesToCheck = [];
             //Loop over the addresses
@@ -57,6 +60,7 @@ var Path = /** @class */ (function () {
             addressesToCheck = addressesToCheck.filter(function (addr, index) {
                 return !_this.addresses.has(addr) && addressesToCheck.indexOf(addr) === index;
             });
+            counter++;
         }
         this.calculateEdges();
     };

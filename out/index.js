@@ -32,4 +32,5 @@ var query_1 = require("./DataProcessing/query");
 exports.QueryAddress = query_1.QueryAddress;
 exports.QueryTransactions = query_1.QueryTransactions;
 exports.QueryBundles = query_1.QueryBundles;
+exports.DIRECTION = query_1.DIRECTION;
 //# sourceMappingURL=index.js.map

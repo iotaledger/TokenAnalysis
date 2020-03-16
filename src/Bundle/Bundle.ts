@@ -21,8 +21,8 @@ export class Bundle {
         this.outTxs = outTxs;
     }
 
-    public async Query() : Promise<void>{
-        return new Promise<void>((resolve, reject) => {
+    public async Query() : Promise<boolean>{
+        return new Promise<boolean>((resolve, reject) => {
             Query({bundles:[this.hash]})
             .then((transactions) => {
                 let transactionHashes : string[] = [];
@@ -54,7 +54,7 @@ export class Bundle {
                             this.inTxs.push(tx.GetTransactionHash());
                         }
                     }
-                    resolve();
+                    resolve((transactions.length>0));
                 })
                 .catch((err : Error) => reject(err));
             })

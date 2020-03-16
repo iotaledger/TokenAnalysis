@@ -9,8 +9,8 @@ export interface QueryRequest {
     bundles?: string[];
 }
 export declare function QueryTransactions(txs: string[]): Promise<string[]>;
-export declare function QueryAddress(addr: string, maxQueryDepth: number, queryDirection?: DIRECTION, callback?: (processedTXCount: number, foundTXCount: number, depth: number) => void): Promise<void>;
-export declare function QueryBundles(bundles: string[], queryDirection?: DIRECTION, store?: boolean): Promise<string[]>;
+export declare function QueryAddress(addr: string, maxQueryDepth: number, queryDirection?: DIRECTION, refresh?: boolean, callback?: (processedTXCount: number, foundTXCount: number, depth: number) => void): Promise<string[]>;
+export declare function QueryBundles(bundles: string[], queryDirection?: DIRECTION, store?: boolean, refresh?: boolean): Promise<string[]>;
 export declare function Query(request: QueryRequest): Promise<Transaction[]>;
 export declare function GetInclusionStates(transactions: string[]): Promise<boolean[]>;
 export declare function getReceivingAddress(transactions: string): Promise<string>;

@@ -12,14 +12,14 @@ export class Path {
     private bundles : Map<string, Bundle>;
     private edges : Map<string, Transaction>;
 
-    constructor(addr : string) {
+    constructor(addr : string, maxDepth : number = 1000) {
         this.originalAddress = addr;
         this.addresses = new Map<string,Address>();
         this.bundles = new Map<string, Bundle>();
         this.edges = new Map<string, Transaction>();
 
         //Load initial path
-        this.AddAddrToPath(addr);
+        this.AddAddrToPath(addr, maxDepth);
     }
 
     public UpdateEndpoints() {
@@ -31,11 +31,12 @@ export class Path {
         });
     }
 
-    private AddAddrToPath(addr : string) {
+    private AddAddrToPath(addr : string, maxDepth : number = 1000) {
         let addressesToCheck : string[] = [addr];
 
         //Create a List of all nodes (Addresses & Bundles)
-        while(addressesToCheck.length) {
+        let counter = 0;
+        while(addressesToCheck.length && counter < maxDepth ) {
             const currentAddresses = [...addressesToCheck];
             addressesToCheck = [];
 
@@ -61,6 +62,7 @@ export class Path {
             addressesToCheck = addressesToCheck.filter((addr, index) => {
                 return !this.addresses.has(addr) && addressesToCheck.indexOf(addr) === index;
             });
+            counter++;
         }
 
         this.calculateEdges();

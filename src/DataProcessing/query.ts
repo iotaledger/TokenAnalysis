@@ -1,6 +1,5 @@
 import { maxTryCount, ProviderList } from "../settings";
-import { composeAPI, Bundle, Transaction } from "@iota/core";
-import {  } from "@iota/converter";
+import { composeAPI, Transaction } from "@iota/core";
 import { AddressManager } from "../Address/AddressManager";
 import { BundleManager } from "../Bundle/BundleManager";
 
@@ -30,53 +29,64 @@ export async function QueryTransactions(txs : string[]) : Promise<string[]> {
     return addresses;
 }
 
-export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD, callback: (processedTXCount : number, foundTXCount : number, depth : number) => void = () => {}) {
-    //Variables
-    let nextAddressesToQuery : string[] = [addr];
-    let depth = 0;
-    let processedTXCount = 0;
+export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD, refresh : boolean = false, callback: (processedTXCount : number, foundTXCount : number, depth : number) => void = () => {}) : Promise<string[]> {
+    return new Promise<string[]>( async (resolve, reject) => {
+        //Variables
+        let nextAddressesToQuery : string[] = [addr];
+        let endPoints : string[] = [];
+        let depth = 0;
+        let processedTXCount = 0;
 
-    //Keep querying until max depth or end found
-    while(nextAddressesToQuery.length && depth < maxQueryDepth) {
-        const addressesToQuery = [...nextAddressesToQuery];
-        nextAddressesToQuery = [];
-        let addrPromises : Promise<void>[] = [];
-        let bundlePromises : Promise<void>[] = [];
+        //Keep querying until max depth or end found
+        while(nextAddressesToQuery.length && depth < maxQueryDepth) {
+            const addressesToQuery = [...nextAddressesToQuery];
+            nextAddressesToQuery = [];
+            let addrPromises : Promise<void>[] = [];
+            let bundlePromises : Promise<void>[] = [];
 
-        //Loop over all addresses
-        for(let i=0; i < addressesToQuery.length; i++) {
-            //Query the Addresses
-            addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
-            .then(async (newBundles : string[]) => {
-                bundlePromises.push(QueryBundles(newBundles, queryDirection)
-                .then((nextAddresses : string[]) => {
-                    nextAddressesToQuery = nextAddressesToQuery.concat(nextAddresses);
-                })
-                .catch((err : Error) => console.log("Top Bundle Error: "+err)));                
-            })
-            .catch((err : Error) => console.log("Top Address Error: " +err)));
+            //Loop over all addresses
+            for(let i=0; i < addressesToQuery.length; i++) {
+                //Query the Addresses
+                addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
+                .then(async (newBundles : string[]) => {
+                    if(!newBundles.length) {
+                        endPoints.push(addressesToQuery[i]);
+                    } else {
+                        bundlePromises.push(QueryBundles(newBundles, queryDirection, undefined, refresh)
+                        .then((nextAddresses : string[]) => {
+                            nextAddressesToQuery = nextAddressesToQuery.concat(nextAddresses);
+                        })
+                        .catch((err : Error) => { console.log("Top Bundle Error: "+err); reject(); }));
+                    }
+                })           
+                .catch((err : Error) => { console.log("Top Address Error: " +err); reject(); }));
+                }
+                //Wait for all Addresses to finish
+                await Promise.all(addrPromises);
+                await Promise.all(bundlePromises);
+
+            //Increment Depth
+            processedTXCount += addressesToQuery.length;
+            depth++;
+            if(depth == maxQueryDepth) {
+                endPoints = endPoints.concat(addressesToQuery);
+            }
+
+            //Report intermediate
+            callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
+            resolve(endPoints);
         }
-        //Wait for all Addresses to finish
-        await Promise.all(addrPromises);
-        await Promise.all(bundlePromises);
-
-        //Increment Depth
-        processedTXCount += addressesToQuery.length;
-        depth++;
-
-        //Report intermediate
-        callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
-    }
+    });
 }
 
-export async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true) : Promise<string[]> {
+export async function QueryBundles(bundles : string[], queryDirection : DIRECTION = DIRECTION.FORWARD, store : boolean = true, refresh : boolean = false) : Promise<string[]> {
     return new Promise<string[]>(async (resolve, reject) => {
         //Loop over the Bundles
         let nextAddressesToQuery : string[] = [];
         let bundlePromise : Promise<void>[] = [];
         for(let k = 0; k < bundles.length; k++) {
             //Query the Bundles
-            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], undefined, queryDirection, store)
+            bundlePromise.push(BundleManager.GetInstance().AddBundle(bundles[k], refresh, queryDirection, store)
             .then((addresses : string[]) => {
                 nextAddressesToQuery = nextAddressesToQuery.concat(addresses);
             })

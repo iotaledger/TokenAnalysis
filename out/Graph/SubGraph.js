@@ -19,9 +19,10 @@ var SubGraph = /** @class */ (function () {
         this.endpointColor = endpointColor;
         this.renderColor = renderColor;
     }
-    SubGraph.prototype.AddAddress = function (addr) {
+    SubGraph.prototype.AddAddress = function (addr, maxDepth) {
+        if (maxDepth === void 0) { maxDepth = 1000; }
         if (!this.paths.has(addr)) {
-            this.paths.set(addr, new Path_1.Path(addr));
+            this.paths.set(addr, new Path_1.Path(addr, maxDepth));
         }
     };
     SubGraph.prototype.UpdateAddresses = function () {
@@ -33,7 +34,7 @@ var SubGraph = /** @class */ (function () {
         DatabaseManager_1.DatabaseManager.ExportToDOT(this.name, [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
     };
     SubGraph.prototype.GetDOTString = function () {
-        return DatabaseManager_1.DatabaseManager.ExportToDOT("", [this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
+        return DatabaseManager_1.DatabaseManager.GenerateDOT([this.GetAddresses()], [this.GetBundles()], this.GetEdges(), [this.endpointColor], [this.renderColor]);
     };
     SubGraph.prototype.GetAddresses = function () {
         var addrs = new Map();

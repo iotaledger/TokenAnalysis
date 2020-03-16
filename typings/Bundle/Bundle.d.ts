@@ -5,7 +5,7 @@ export declare class Bundle {
     private outTxs;
     constructor(bundleHash: string);
     SetData(bundle: string, timestamp: number, inTxs: string[], outTxs: string[]): void;
-    Query(): Promise<void>;
+    Query(): Promise<boolean>;
     GetBundleHash(): string;
     hasTrinityTag(): boolean;
     GetOutTxs(): string[];

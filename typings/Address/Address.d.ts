@@ -6,7 +6,7 @@ export declare class Address {
     private outTxs;
     constructor(addr: string);
     SetData(addr: string, timestamp: number, currentValue: number, inTxs: string[], outTxs: string[]): void;
-    Query(): Promise<void>;
+    Query(): Promise<boolean>;
     GetAddressHash(): string;
     IsSpent(): boolean;
     GetCurrentValue(): number;
