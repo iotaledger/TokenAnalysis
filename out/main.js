@@ -42,7 +42,7 @@ var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 var Graph_1 = require("./Graph/Graph");
 var SubGraph_1 = require("./Graph/SubGraph");
 //Execution of the script
-GenerateGraph(settings_1.command);
+//GenerateGraph(command);
 function GenerateGraph(settings) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
