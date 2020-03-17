@@ -144,7 +144,6 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                                 }
                                                 //Report intermediate
                                                 callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
-                                                resolve(endPoints);
                                                 return [2 /*return*/];
                                         }
                                     });
@@ -156,7 +155,9 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                             case 2:
                                 _a.sent();
                                 return [3 /*break*/, 1];
-                            case 3: return [2 /*return*/];
+                            case 3:
+                                resolve(endPoints);
+                                return [2 /*return*/];
                         }
                     });
                 }); })];

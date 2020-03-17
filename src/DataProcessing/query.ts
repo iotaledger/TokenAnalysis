@@ -74,8 +74,8 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
 
             //Report intermediate
             callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
-            resolve(endPoints);
         }
+        resolve(endPoints);
     });
 }
 
