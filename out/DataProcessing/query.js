@@ -109,7 +109,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                                     addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
                                                         .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
                                                         return __generator(this, function (_a) {
-                                                            console.log("LIB: Bundles found" + console.log(newBundles));
+                                                            console.log("LIB: Bundles found" + console.log(JSON.stringify(newBundles)));
                                                             if (!newBundles.length) {
                                                                 endPoints.push(addressesToQuery[i]);
                                                             }
