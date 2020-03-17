@@ -32,6 +32,7 @@ export async function QueryTransactions(txs : string[]) : Promise<string[]> {
 export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD, refresh : boolean = false, callback: (processedTXCount : number, foundTXCount : number, depth : number) => void = () => {}) : Promise<string[]> {
     return new Promise<string[]>( async (resolve, reject) => {
         //Variables
+        console.log("Started:" + addr);
         let nextAddressesToQuery : string[] = [addr];
         let endPoints : string[] = [];
         let depth = 0;
@@ -40,6 +41,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
         //Keep querying until max depth or end found
         while(nextAddressesToQuery.length && depth < maxQueryDepth) {
             const addressesToQuery = [...nextAddressesToQuery];
+            console.log("addressesToQuery:" + JSON.stringify(addressesToQuery));
             nextAddressesToQuery = [];
             let addrPromises : Promise<void>[] = [];
             let bundlePromises : Promise<void>[] = [];

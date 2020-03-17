@@ -91,6 +91,8 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
+                                //Variables
+                                console.log("Started:" + addr);
                                 nextAddressesToQuery = [addr];
                                 endPoints = [];
                                 depth = 0;
@@ -101,6 +103,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                         switch (_a.label) {
                                             case 0:
                                                 addressesToQuery = __spreadArrays(nextAddressesToQuery);
+                                                console.log("addressesToQuery:" + JSON.stringify(addressesToQuery));
                                                 nextAddressesToQuery = [];
                                                 addrPromises = [];
                                                 bundlePromises = [];
