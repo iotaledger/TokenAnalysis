@@ -49,7 +49,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
                 //Query the Addresses
                 addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
                 .then(async (newBundles : string[]) => {
-                    console.log("LIB: Bundles found" + console.log(JSON.stringify(newBundles)));
+                    console.log("LIB: Bundles found" + JSON.stringify(newBundles));
                     if(!newBundles.length) {
                         endPoints.push(addressesToQuery[i]);
                     } else {
