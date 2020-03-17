@@ -110,7 +110,7 @@ function GenerateGraph(settings) {
                                     combinedGraph.SubGraphAddition(subGraph);
                                 }
                                 else if (graph.renderType == GraphToQuery_1.RenderType.SUBTRACT) {
-                                    combinedGraph.SubGraphSubtraction(subGraph);
+                                    combinedGraph.SubGraphSubtraction(subGraph, true);
                                 }
                                 _g.label = 8;
                             case 8:

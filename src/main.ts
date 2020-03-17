@@ -54,7 +54,7 @@ export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
             if(graph.renderType == RenderType.ADD) {
                 combinedGraph.SubGraphAddition(subGraph);
             } else if (graph.renderType == RenderType.SUBTRACT) {
-                combinedGraph.SubGraphSubtraction(subGraph);
+                combinedGraph.SubGraphSubtraction(subGraph, true);
             }
         }
 

@@ -9,6 +9,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var DatabaseManager_1 = require("../DataProcessing/DatabaseManager");
 var TransactionManager_1 = require("../Transactions/TransactionManager");
+var AddressManager_1 = require("../Address/AddressManager");
 var Graph = /** @class */ (function () {
     function Graph(name) {
         this.name = name;
@@ -26,8 +27,9 @@ var Graph = /** @class */ (function () {
         this.outputColors.push(subgraph.GetEndpointColor());
         this.renderColors.push(subgraph.GetRenderColor());
     };
-    Graph.prototype.SubGraphSubtraction = function (subgraph) {
+    Graph.prototype.SubGraphSubtraction = function (subgraph, keepedges) {
         var _this = this;
+        if (keepedges === void 0) { keepedges = false; }
         //Loop through all existing graphs and remove overlap
         subgraph.GetAddresses().forEach(function (value, key) {
             for (var k = 0; k < _this.addressess.length; k++) {
@@ -87,6 +89,27 @@ var Graph = /** @class */ (function () {
     };
     Graph.prototype.GetDOTString = function () {
         return DatabaseManager_1.DatabaseManager.GenerateDOT(this.addressess, this.bundles, this.edges, this.outputColors, this.renderColors);
+    };
+    Graph.prototype.GetAddresses = function () {
+        var addresses = [];
+        for (var i = 0; i < this.addressess.length; i++) {
+            addresses = addresses.concat(Array.from(this.addressess[i].keys()));
+        }
+        return addresses;
+    };
+    Graph.prototype.GetUnspentAddresses = function () {
+        var addresses = Array.from(this.GetAddresses().values()).filter(function (value) {
+            var _a;
+            return !((_a = AddressManager_1.AddressManager.GetInstance().GetAddressItem(value)) === null || _a === void 0 ? void 0 : _a.IsSpent());
+        });
+        return addresses;
+    };
+    Graph.prototype.GetBundles = function () {
+        var bundles = [];
+        for (var i = 0; i < this.bundles.length; i++) {
+            bundles = bundles.concat(Array.from(this.bundles[i].keys()));
+        }
+        return bundles;
     };
     return Graph;
 }());

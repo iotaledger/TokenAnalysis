@@ -8,8 +8,11 @@ export declare class Graph {
     private renderColors;
     constructor(name: string);
     SubGraphAddition(subgraph: SubGraph): void;
-    SubGraphSubtraction(subgraph: SubGraph): void;
+    SubGraphSubtraction(subgraph: SubGraph, keepedges?: boolean): void;
     private calculateEdges;
     ExportToDOT(): void;
     GetDOTString(): string;
+    GetAddresses(): string[];
+    GetUnspentAddresses(): string[];
+    GetBundles(): string[];
 }

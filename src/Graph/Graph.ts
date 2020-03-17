@@ -4,6 +4,7 @@ import { Bundle } from "../Bundle/Bundle";
 import { Transaction } from "../Transactions/Transaction";
 import { DatabaseManager } from "../DataProcessing/DatabaseManager";
 import { TransactionManager } from "../Transactions/TransactionManager";
+import { AddressManager } from "../Address/AddressManager";
 
 export class Graph {
     private name : string;
@@ -31,7 +32,7 @@ export class Graph {
         this.renderColors.push(subgraph.GetRenderColor());
     }
 
-    public SubGraphSubtraction(subgraph : SubGraph) {
+    public SubGraphSubtraction(subgraph : SubGraph, keepedges : boolean = false) {
         //Loop through all existing graphs and remove overlap
         subgraph.GetAddresses().forEach((value : Address, key :string) => {
             for(let k=0; k < this.addressess.length; k++) {
@@ -96,5 +97,28 @@ export class Graph {
 
     public GetDOTString() : string {
         return DatabaseManager.GenerateDOT(this.addressess, this.bundles, this.edges, this.outputColors, this.renderColors);
+    }
+
+    public GetAddresses() : string[] {
+        let addresses : string[] = [];
+        for(let i=0; i<this.addressess.length;i++) {
+            addresses = addresses.concat(Array.from(this.addressess[i].keys()));
+        }
+        return addresses;
+    }
+
+    public GetUnspentAddresses() : string[] {
+        let addresses = Array.from(this.GetAddresses().values()).filter((value : string) => {
+            return !AddressManager.GetInstance().GetAddressItem(value)?.IsSpent();
+        });
+        return addresses;
+    }
+
+    public GetBundles() : string[] {
+        let bundles : string[] = [];
+        for(let i=0; i<this.bundles.length;i++) {
+            bundles = bundles.concat(Array.from(this.bundles[i].keys()));
+        }
+        return bundles;
     }
 }
