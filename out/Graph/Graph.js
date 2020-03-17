@@ -95,6 +95,10 @@ var Graph = /** @class */ (function () {
         for (var i = 0; i < this.addressess.length; i++) {
             addresses = addresses.concat(Array.from(this.addressess[i].keys()));
         }
+        //Filter duplicates
+        addresses = addresses.filter(function (addr, index) {
+            return (addresses.indexOf(addr) === index);
+        });
         return addresses;
     };
     Graph.prototype.GetUnspentAddresses = function () {
@@ -109,6 +113,10 @@ var Graph = /** @class */ (function () {
         for (var i = 0; i < this.bundles.length; i++) {
             bundles = bundles.concat(Array.from(this.bundles[i].keys()));
         }
+        //Filter duplicates
+        bundles = bundles.filter(function (bundle, index) {
+            return (bundles.indexOf(bundle) === index);
+        });
         return bundles;
     };
     return Graph;
