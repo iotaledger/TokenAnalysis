@@ -104,6 +104,11 @@ export class Graph {
         for(let i=0; i<this.addressess.length;i++) {
             addresses = addresses.concat(Array.from(this.addressess[i].keys()));
         }
+        //Filter duplicates
+        addresses = addresses.filter((addr, index) => {
+            return (addresses.indexOf(addr) === index);
+        });
+
         return addresses;
     }
 
@@ -119,6 +124,11 @@ export class Graph {
         for(let i=0; i<this.bundles.length;i++) {
             bundles = bundles.concat(Array.from(this.bundles[i].keys()));
         }
+
+        //Filter duplicates
+        bundles = bundles.filter((bundle, index) => {
+            return (bundles.indexOf(bundle) === index);
+        });
         return bundles;
     }
 }
