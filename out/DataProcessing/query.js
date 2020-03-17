@@ -91,8 +91,6 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                //Variables
-                                console.log("Started:" + addr);
                                 nextAddressesToQuery = [addr];
                                 endPoints = [];
                                 depth = 0;
@@ -103,16 +101,14 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                         switch (_a.label) {
                                             case 0:
                                                 addressesToQuery = __spreadArrays(nextAddressesToQuery);
-                                                console.log("addressesToQuery:" + JSON.stringify(addressesToQuery));
                                                 nextAddressesToQuery = [];
                                                 addrPromises = [];
                                                 bundlePromises = [];
                                                 _loop_2 = function (i) {
                                                     //Query the Addresses
-                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
+                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
                                                         .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
                                                         return __generator(this, function (_a) {
-                                                            console.log("LIB: Bundles found" + JSON.stringify(newBundles));
                                                             if (!newBundles.length) {
                                                                 endPoints.push(addressesToQuery[i]);
                                                             }
