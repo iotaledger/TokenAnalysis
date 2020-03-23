@@ -106,7 +106,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                                 bundlePromises = [];
                                                 _loop_2 = function (i) {
                                                     //Query the Addresses
-                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
+                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
                                                         .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
                                                         return __generator(this, function (_a) {
                                                             if (!newBundles.length) {
@@ -144,7 +144,6 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                                 }
                                                 //Report intermediate
                                                 callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
-                                                resolve(endPoints);
                                                 return [2 /*return*/];
                                         }
                                     });
@@ -156,7 +155,9 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                             case 2:
                                 _a.sent();
                                 return [3 /*break*/, 1];
-                            case 3: return [2 /*return*/];
+                            case 3:
+                                resolve(endPoints);
+                                return [2 /*return*/];
                         }
                     });
                 }); })];

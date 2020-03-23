@@ -6,7 +6,7 @@ import { Graph } from "./Graph/Graph";
 import { SubGraph } from "./Graph/SubGraph";
 
 //Execution of the script
-GenerateGraph(command);
+//GenerateGraph(command);
 
 export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
     return new Promise<Graph>( async (resolve, reject) => {
@@ -54,7 +54,7 @@ export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
             if(graph.renderType == RenderType.ADD) {
                 combinedGraph.SubGraphAddition(subGraph);
             } else if (graph.renderType == RenderType.SUBTRACT) {
-                combinedGraph.SubGraphSubtraction(subGraph);
+                combinedGraph.SubGraphSubtraction(subGraph, true);
             }
         }
 

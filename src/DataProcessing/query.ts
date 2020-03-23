@@ -47,7 +47,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
             //Loop over all addresses
             for(let i=0; i < addressesToQuery.length; i++) {
                 //Query the Addresses
-                addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], undefined, queryDirection)
+                addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
                 .then(async (newBundles : string[]) => {
                     if(!newBundles.length) {
                         endPoints.push(addressesToQuery[i]);
@@ -74,8 +74,8 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
 
             //Report intermediate
             callback(processedTXCount, processedTXCount + nextAddressesToQuery.length, depth);
-            resolve(endPoints);
         }
+        resolve(endPoints);
     });
 }
 

@@ -42,7 +42,7 @@ var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 var Graph_1 = require("./Graph/Graph");
 var SubGraph_1 = require("./Graph/SubGraph");
 //Execution of the script
-GenerateGraph(settings_1.command);
+//GenerateGraph(command);
 function GenerateGraph(settings) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
@@ -110,7 +110,7 @@ function GenerateGraph(settings) {
                                     combinedGraph.SubGraphAddition(subGraph);
                                 }
                                 else if (graph.renderType == GraphToQuery_1.RenderType.SUBTRACT) {
-                                    combinedGraph.SubGraphSubtraction(subGraph);
+                                    combinedGraph.SubGraphSubtraction(subGraph, true);
                                 }
                                 _g.label = 8;
                             case 8:
