@@ -1,8 +1,8 @@
 
 import zmq from "zeromq";
-import { IZmqConfiguration } from "../models/IZmqConfiguration";
-import { IAddress } from "../models/zmqService/IAddress";
-import { ZmqEvent } from "../models/zmqService/zmqEvents";
+import { IZmqConfiguration } from "../Models/IZmqConfiguration";
+import { IAddress } from "../Models/zmqService/IAddress";
+import { ZmqEvent } from "../Models/zmqService/zmqEvents";
 import { v4 as uuid } from 'uuid';
 
 /**

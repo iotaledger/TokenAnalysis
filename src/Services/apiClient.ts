@@ -1,9 +1,9 @@
 import io from "socket.io-client";
-import { IResponse } from "../models/api/IResponse";
-import { IZmqSubscribeResponse } from "../models/api/IZmqSubscribeResponse";
-import { IZmqSubscriptionMessage } from "../models/api/IZmqSubscriptionMessage";
-import { IZmqUnsubscribeRequest } from "../models/api/IZmqUnsubscribeRequest";
-import { IZmqSubscribeAddressRequest } from "../models/api/IZmqSubscribeAddressRequest";
+import { IResponse } from "../Models/api/IResponse";
+import { IZmqSubscribeResponse } from "../Models/api/IZmqSubscribeResponse";
+import { IZmqSubscriptionMessage } from "../Models/api/IZmqSubscriptionMessage";
+import { IZmqUnsubscribeRequest } from "../Models/api/IZmqUnsubscribeRequest";
+import { IZmqSubscribeAddressRequest } from "../Models/api/IZmqSubscribeAddressRequest";
 
 /**
  * Class to handle api communications.

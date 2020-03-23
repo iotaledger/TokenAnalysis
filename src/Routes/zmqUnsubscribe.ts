@@ -1,8 +1,8 @@
 import SocketIO from "socket.io";
 import { ServiceFactory } from "../Factories/serviceFactory";
-import { IResponse } from "../models/api/IResponse";
-import { IZmqUnsubscribeRequest } from "../models/api/IZmqUnsubscribeRequest";
-import { IConfiguration } from "../models/IConfiguration";
+import { IResponse } from "../Models/api/IResponse";
+import { IZmqUnsubscribeRequest } from "../Models/api/IZmqUnsubscribeRequest";
+import { IConfiguration } from "../Models/IConfiguration";
 import { ZmqService } from "../Services/zmqService";
 
 /**

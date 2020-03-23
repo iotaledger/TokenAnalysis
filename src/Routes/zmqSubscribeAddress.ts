@@ -1,10 +1,10 @@
 import SocketIO from "socket.io";
 import { ServiceFactory } from "../Factories/serviceFactory";
-import { IZmqSubscribeResponse } from "../models/api/IZmqSubscribeResponse";
-import { IZmqSubscriptionMessage } from "../models/api/IZmqSubscriptionMessage";
-import { IConfiguration } from "../models/IConfiguration";
+import { IZmqSubscribeResponse } from "../Models/api/IZmqSubscribeResponse";
+import { IZmqSubscriptionMessage } from "../Models/api/IZmqSubscriptionMessage";
+import { IConfiguration } from "../Models/IConfiguration";
 import { ZmqService } from "../Services/zmqService";
-import { IZmqSubscribeAddressRequest } from "../models/api/IZmqSubscribeAddressRequest";
+import { IZmqSubscribeAddressRequest } from "../Models/api/IZmqSubscribeAddressRequest";
 
 /**
  * Unsubscribe from zmq events.
