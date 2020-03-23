@@ -1,5 +1,8 @@
 import { GraphToQuery, RenderType, Settings } from "./DataProcessing/GraphToQuery";
 
+export const zmqConfig = { "zmq": { "endpoint": "tcp://zmq.devnet.iota.org:5556" }};
+export const domain = "http://localhost:4000/"
+export const port = 4000;
 export const maxTryCount = 8;
 export const maxQueryDepth = 1000;
 
