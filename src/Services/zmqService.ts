@@ -154,6 +154,7 @@ export class ZmqService {
      * @param message The message to handle.
      */
     private handleMessage(message: Buffer): void {
+        console.log("Message")
         const messageContent = message.toString();
         const messageParams = messageContent.split(" ");
 
