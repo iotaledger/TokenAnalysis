@@ -183,3 +183,19 @@ export async function getReceivingAddress(transactions : string) : Promise<strin
         reject("Rejected request as MaxTryCount is reached");
     });
 }
+
+export async function getBundleHashFromTransaction(transactions : string) : Promise<string> {
+    return new Promise<string>(async (resolve, reject) => {
+            let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
+            let iota = composeAPI({provider : provider});
+            try {
+                let result = await iota.getTransactionObjects(<readonly string[]>[transactions]);
+                resolve(result[0].bundle);
+                return;
+            }
+            catch(err) {
+                console.log("Error caught for node "+provider+" : " + err);
+            }
+                reject("Rejected request as MaxTryCount is reached");
+    });
+}
