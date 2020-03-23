@@ -1,11 +1,11 @@
 import { Server } from "http";
 import SocketIO from "socket.io";
-import { zmqUnsubscribe } from "./routes/zmqUnsubscribe";
+import { zmqUnsubscribe } from "./Routes/zmqUnsubscribe";
 import { ZmqService } from "./Services/zmqService";
 
 
 import { ServiceFactory } from "./Factories/serviceFactory";
-import { zmqSubscribeAddress } from "./routes/zmqSubscribeAddress";
+import { zmqSubscribeAddress } from "./Routes/zmqSubscribeAddress";
 import { zmqConfig, port } from "./settings-default"
 
 

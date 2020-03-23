@@ -21,8 +21,8 @@ export { QueryAddress, QueryTransactions, QueryBundles, DIRECTION} from "./DataP
 import { ServiceFactory } from "./Factories/serviceFactory";
 import { ApiClient } from './Services/apiClient';
 import { domain } from './settings-default';
-import {  getBundleHashFromTransaction, QueryTransactions  } from "./DataProcessing/query"
-import { IAddress } from "./models/zmqService/IAddress";
+import {  getBundleHashFromTransaction} from "./DataProcessing/query"
+import { IAddress } from "./Models/zmqService/IAddress";
 
 
 
@@ -86,4 +86,3 @@ if (response.success) {
 }
 
 }
-//findme()
