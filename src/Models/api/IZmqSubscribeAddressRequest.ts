@@ -1,7 +1,7 @@
 
 export interface IZmqSubscribeAddressRequest {
     /**
-     * The events to subscribe to.
+     * The adress to subscribe to.
      */
     address: string[];
 }

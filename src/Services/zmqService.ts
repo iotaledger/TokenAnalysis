@@ -154,7 +154,6 @@ export class ZmqService {
      * @param message The message to handle.
      */
     private handleMessage(message: Buffer): void {
-        console.log("Message")
         const messageContent = message.toString();
         const messageParams = messageContent.split(" ");
 
@@ -163,7 +162,6 @@ export class ZmqService {
         if (this._subscriptions[event]) {
             let data;
                     if (/^[A-Z9]{81}$/.test(event)) {
-                        console.log("dd", messageParams)
                         data = <IAddress>{
                             address: messageParams[0],
                             transaction: messageParams[1],
