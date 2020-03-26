@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node ./src/offlineTrace.ts",
-    "trace": "ts-node ./src/LiveTrace.ts"
+    "trace": "ts-node ./src/LiveTrace.ts",
+    "test": "ts-node ./src/tester.ts"
   },
   "author": "Jelle Millenaar (Jelle.millenaar@iota.org)",
   "license": "ISC",

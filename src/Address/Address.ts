@@ -34,6 +34,7 @@ export class Address {
                 for(let k=0; k < transactions.length; k++) {
                     transactionHashes.push(transactions[k].hash);
                 }
+                //console.log(transactionHashes);
 
                 //Filter out unconfirmed transactions
                 GetInclusionStates(transactionHashes)

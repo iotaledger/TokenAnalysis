@@ -10,6 +10,7 @@ import { SubGraph } from "./Graph/SubGraph";
 
 export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
     return new Promise<Graph>( async (resolve, reject) => {
+        let t0 = new Date().getTime();
         //Create the total Graph
         let combinedGraph : Graph = new Graph(settings.name);
 
@@ -60,6 +61,12 @@ export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
 
         //Combined
         combinedGraph.ExportToDOT();
+        let t1 = new Date().getTime();
+        let executiontime = t1-t0;
+        console.log("Time to execute task: " + executiontime/1000 + " seconds");
+        console.log( combinedGraph.GetAddresses().length + " addresses found");
+        console.log( combinedGraph.GetBundles().length + " bundles found");
+        console.log( combinedGraph.GetUnspentAddresses().length + " unspent addresses found");
         resolve(combinedGraph);
     });
     

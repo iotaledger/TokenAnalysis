@@ -26,7 +26,7 @@ export class BundleManager {
                     }
                     //Add Bundle to the list
                     if(store)
-                        this.bundles.set(bundleHash, bundle);                    
+                        this.bundles.set(bundleHash, bundle);                 
 
                     //Return the next addresses to process
                     if(loadDirection == DIRECTION.FORWARD) {
