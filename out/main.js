@@ -41,8 +41,6 @@ var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 var Graph_1 = require("./Graph/Graph");
 var SubGraph_1 = require("./Graph/SubGraph");
 var SettingsManager_1 = require("./SettingsManager");
-//Execution of the script
-//GenerateGraph(command);
 function GenerateGraph(settings) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
@@ -77,17 +75,11 @@ function GenerateGraph(settings) {
                                 _g.label = 4;
                             case 4:
                                 if (!(i < graph.addressesToSearch.length)) return [3 /*break*/, 7];
-                                //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
-                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], SettingsManager_1.SettingsManager.GetInstance().GetMaxQueryDepth(), undefined, undefined, function (processedTXCount, foundTXCount, depth) {
+                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], SettingsManager_1.SettingsManager.GetInstance().GetMaxQueryDepth(), undefined, undefined, true, function (processedTXCount, foundTXCount, depth) {
                                         console.log(processedTXCount + "/" + foundTXCount + " with depth " + depth);
                                     })];
                             case 5:
-                                //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
                                 _g.sent();
-                                //Cache Results
-                                //let cacheExporter = new GraphExporter(graph.addressesToSearch[i]);
-                                //cacheExporter.AddAddressSubGraph(graph.addressesToSearch[i]);
-                                //cacheExporter.ExportToCSV("Cache");
                                 //Add to Subgraph
                                 subGraph.AddAddress(graph.addressesToSearch[i]);
                                 _g.label = 6;
@@ -95,13 +87,10 @@ function GenerateGraph(settings) {
                                 i++;
                                 return [3 /*break*/, 4];
                             case 7:
-                                subGraph.ExportAllUnspentAddressHashes("Database");
-                                subGraph.ExportAllTransactionHashes("Database");
-                                //Export commands
-                                //let exporter = new GraphExporter(graph.name);
-                                //exporter.AddAll();
-                                //Export(exporter);
-                                //console.log("Unspent value in end addresses from "+graph.name+": " + exporter.GetUnspentValue());
+                                //Optional Caching
+                                if (settings.caching) {
+                                    subGraph.CacheAllAddresses();
+                                }
                                 //Add Subgraph to main graph and optionally render
                                 if (settings.seperateRender) {
                                     subGraph.ExportToDOT();
@@ -128,21 +117,4 @@ function GenerateGraph(settings) {
     });
 }
 exports.GenerateGraph = GenerateGraph;
-// function Export(exporter : GraphExporter) {
-//     if(command.seperateRender) {
-//         exporter.ExportToDOT();
-//     }
-//     if(command.outputAllAddresses) {
-//         exporter.ExportAllAddressHashes("Database");
-//     }
-//     if(command.outputAllBundles) {
-//         exporter.ExportAllBundleHashes("Database");
-//     }
-//     if(command.outputAllTxs) {
-//         exporter.ExportAllTransactionHashes("Database");
-//     }
-//     if(command.outputAllPositiveAddresses) {
-//         exporter.ExportAllUnspentAddressHashes("Database");
-//     }
-// }
 //# sourceMappingURL=main.js.map

@@ -1,5 +1,6 @@
 import { Address } from "./Address";
 import { DIRECTION } from "../DataProcessing/query";
+import { DatabaseManager } from "../DataProcessing/DatabaseManager";
 
 
 export class AddressManager {
@@ -14,8 +15,13 @@ export class AddressManager {
         this.addresses.set(addr.GetAddressHash(), addr);
     }
 
-    public async AddAddress(addr : string, refresh : boolean = false, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
+    public async AddAddress(addr : string, refresh : boolean = false, useCache : boolean = false, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
         return new Promise<string[]>( async (resolve, reject) => {
+            //Check if the address was cached and load it
+            if(useCache) {
+                DatabaseManager.ImportFromCSV("Cache", addr);
+            }
+
             //Load the Addresses
             if(!this.addresses.has(addr) || refresh) {
                 let newAddr : Address = new Address(addr);
@@ -38,7 +44,7 @@ export class AddressManager {
                 .catch((err : Error) => reject(err));
             } else {
                 //Addresses has already been loaded
-                resolve([]);
+                resolve(this.GetAddressItem(addr)?.GetOutBundles());
             }
         });
     }

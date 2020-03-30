@@ -29,7 +29,7 @@ export async function QueryTransactions(txs : string[]) : Promise<string[]> {
     return addresses;
 }
 
-export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD, refresh : boolean = false, callback: (processedTXCount : number, foundTXCount : number, depth : number) => void = () => {}) : Promise<string[]> {
+export async function QueryAddress(addr : string, maxQueryDepth : number, queryDirection : DIRECTION = DIRECTION.FORWARD, refresh : boolean = false, useCache : boolean = false, callback: (processedTXCount : number, foundTXCount : number, depth : number) => void = () => {}) : Promise<string[]> {
     return new Promise<string[]>( async (resolve, reject) => {
         //Variables
         let nextAddressesToQuery : string[] = [addr];
@@ -47,7 +47,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
             //Loop over all addresses
             for(let i=0; i < addressesToQuery.length; i++) {
                 //Query the Addresses
-                addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
+                addrPromises.push(AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, useCache ,queryDirection)
                 .then(async (newBundles : string[]) => {
                     if(!newBundles.length) {
                         endPoints.push(addressesToQuery[i]);

@@ -24,8 +24,6 @@ exports.SettingsManager = SettingsManager_1.SettingsManager;
 //Graphs
 var DatabaseManager_1 = require("./DataProcessing/DatabaseManager");
 exports.DatabaseManager = DatabaseManager_1.DatabaseManager;
-var GraphExporter_1 = require("./DataProcessing/GraphExporter");
-exports.GraphExporter = GraphExporter_1.GraphExporter;
 var Graph_1 = require("./Graph/Graph");
 exports.Graph = Graph_1.Graph;
 var SubGraph_1 = require("./Graph/SubGraph");

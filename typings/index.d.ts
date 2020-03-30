@@ -8,7 +8,6 @@ export { TransactionManager } from "./Transactions/TransactionManager";
 export { Transaction } from "./Transactions/Transaction";
 export { SettingsManager } from "./SettingsManager";
 export { DatabaseManager } from "./DataProcessing/DatabaseManager";
-export { GraphExporter } from "./DataProcessing/GraphExporter";
 export { Graph } from "./Graph/Graph";
 export { SubGraph } from "./Graph/SubGraph";
 export { QueryAddress, QueryTransactions, QueryBundles, DIRECTION } from "./DataProcessing/query";

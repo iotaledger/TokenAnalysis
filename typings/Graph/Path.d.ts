@@ -7,9 +7,9 @@ export declare class Path {
     private bundles;
     private edges;
     constructor(addr: string, maxDepth?: number);
-    UpdateEndpoints(): void;
     private AddAddrToPath;
     private calculateEdges;
+    Cache(folder: string): void;
     GetAddresses(): Map<string, Address>;
     GetBundles(): Map<string, Bundle>;
     GetTransactions(): Map<string, Transaction>;

@@ -25,9 +25,9 @@ export class SubGraph {
         }
     }
 
-    public UpdateAddresses() {
-        this.paths.forEach((value : Path, key : string) => {
-            value.UpdateEndpoints();
+    public CacheAllAddresses() {
+        this.paths.forEach((value : Path) => {
+            value.Cache("Cache");
         });
     }
 

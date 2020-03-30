@@ -50,10 +50,7 @@ function Trace(addressToTrace) {
                     settings = {
                         name: addressToTrace,
                         seperateRender: false,
-                        outputAllAddresses: false,
-                        outputAllBundles: false,
-                        outputAllPositiveAddresses: false,
-                        outputAllTxs: false,
+                        caching: false,
                         graphs: [
                             new GraphToQuery_1.GraphToQuery("RecentTrace", GraphToQuery_1.RenderType.ADD, "#fcc658", "#ffb621", undefined, undefined, [addressToTrace])
                         ]

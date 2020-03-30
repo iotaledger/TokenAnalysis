@@ -8,11 +8,8 @@ var NewThefts = [
 ];
 exports.command = {
     name: "NewThefts",
+    caching: true,
     seperateRender: true,
-    outputAllTxs: false,
-    outputAllBundles: false,
-    outputAllAddresses: false,
-    outputAllPositiveAddresses: false,
     graphs: [
         new GraphToQuery_1.GraphToQuery("NewThefts", GraphToQuery_1.RenderType.ADD, "#fcc658", "#ffb621", undefined, undefined, NewThefts),
     ]

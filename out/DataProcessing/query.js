@@ -78,9 +78,10 @@ function QueryTransactions(txs) {
     });
 }
 exports.QueryTransactions = QueryTransactions;
-function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
+function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, useCache, callback) {
     if (queryDirection === void 0) { queryDirection = DIRECTION.FORWARD; }
     if (refresh === void 0) { refresh = false; }
+    if (useCache === void 0) { useCache = false; }
     if (callback === void 0) { callback = function () { }; }
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
@@ -106,7 +107,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                                 bundlePromises = [];
                                                 _loop_2 = function (i) {
                                                     //Query the Addresses
-                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
+                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, useCache, queryDirection)
                                                         .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
                                                         return __generator(this, function (_a) {
                                                             if (!newBundles.length) {

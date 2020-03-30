@@ -5,7 +5,7 @@ export declare class AddressManager {
     private addresses;
     private constructor();
     LoadAddress(addr: Address): void;
-    AddAddress(addr: string, refresh?: boolean, loadDirection?: DIRECTION): Promise<string[]>;
+    AddAddress(addr: string, refresh?: boolean, useCache?: boolean, loadDirection?: DIRECTION): Promise<string[]>;
     static GetInstance(): AddressManager;
     GetAddressItem(addr: string): Address | undefined;
     GetAddresses(): Map<string, Address>;

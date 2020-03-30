@@ -12,10 +12,7 @@ async function Trace(addressToTrace : string) {
     let settings : Request = {
         name : addressToTrace,
         seperateRender : false,
-        outputAllAddresses : false,
-        outputAllBundles : false,
-        outputAllPositiveAddresses : false,
-        outputAllTxs : false,
+        caching : false,
         graphs : [
             new GraphToQuery("RecentTrace", RenderType.ADD, "#fcc658", "#ffb621", undefined, undefined, [addressToTrace] )
         ]

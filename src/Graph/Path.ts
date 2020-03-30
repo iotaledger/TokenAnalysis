@@ -4,7 +4,7 @@ import { Address } from "../Address/Address";
 import { TransactionManager } from "../Transactions/TransactionManager";
 import { Transaction } from "../Transactions/Transaction";
 import { Bundle } from "../Bundle/Bundle";
-
+const fs = require('fs');
 
 export class Path {
     private originalAddress : string;
@@ -20,15 +20,6 @@ export class Path {
 
         //Load initial path
         this.AddAddrToPath(addr, maxDepth);
-    }
-
-    public UpdateEndpoints() {
-        //Update all addresses with value should be updated via a Query
-        this.addresses.forEach((value : Address, key : string) =>{
-            if(!value.IsSpent()) {
-                this.AddAddrToPath(key);
-            }
-        });
     }
 
     private AddAddrToPath(addr : string, maxDepth : number = 1000) {
@@ -80,6 +71,50 @@ export class Path {
                 this.edges.set(key, value);
             }
         });
+    }
+
+    public Cache(folder : string) {
+         //Initialize
+         let fileString = "";
+
+         //Save Transactions
+         this.edges.forEach((value : Transaction, key : string) => {
+             fileString = fileString.concat("tx;" + key + ";" + value.GetInput() + ';' + value.GetOutput() + ";" + value.GetValue() + ";" + value.GetTag() + "\n");
+         });
+ 
+         //Save Addresses
+         this.addresses.forEach((value : Address, key : string) => {
+             //Initial Values
+             fileString = fileString.concat("addr;" + key + ";" + value.GetTimestamp() + ";" + value.GetCurrentValue());
+             
+             //Arrays
+             fileString = fileString.concat(";" + JSON.stringify(value.GetInTxs()));
+             fileString = fileString.concat(";" + JSON.stringify(value.GetOutTxs()));
+ 
+             //Finish
+             fileString = fileString.concat("\n");
+         });
+ 
+         //Save Bundles
+         this.bundles.forEach((value : Bundle, key : string) => {
+             //Initial Values
+             fileString = fileString.concat("bundle;" + key + ";" + value.GetTimestamp());
+ 
+             //Arrays
+             fileString = fileString.concat(";" + JSON.stringify(value.GetInTxs()));
+             fileString = fileString.concat(";" + JSON.stringify(value.GetOutTxs()));
+ 
+             //Finish
+             fileString = fileString.concat("\n");
+         });
+ 
+         //Store to File
+         fs.writeFile( folder + "/" + this.originalAddress + ".csv", fileString, (err : Error) => {
+             if(err) console.log("Error writing file: " + this.originalAddress + ":" + err);
+             else {
+                 console.log("Succesfully saved " + this.originalAddress);
+             }
+         });
     }
 
     public GetAddresses() : Map<string, Address> {

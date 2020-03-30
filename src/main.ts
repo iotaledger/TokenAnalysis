@@ -4,9 +4,6 @@ import { Graph } from "./Graph/Graph";
 import { SubGraph } from "./Graph/SubGraph";
 import { SettingsManager } from "./SettingsManager";
 
-//Execution of the script
-//GenerateGraph(command);
-
 export async function GenerateGraph( settings : Request ) : Promise<Graph> {
     return new Promise<Graph>( async (resolve, reject) => {
         //Create the total Graph
@@ -23,28 +20,18 @@ export async function GenerateGraph( settings : Request ) : Promise<Graph> {
             //Convert Bundle commands into addresses
             graph.addressesToSearch = graph.addressesToSearch.concat(await QueryBundles(graph.bundlesToSearch, DIRECTION.BACKWARD, false));
             for(let i=0; i < graph.addressesToSearch.length; i++){ 
-                //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
-                await QueryAddress(graph.addressesToSearch[i], SettingsManager.GetInstance().GetMaxQueryDepth(), undefined, undefined, (processedTXCount:number, foundTXCount : number, depth:number) => {
+                await QueryAddress(graph.addressesToSearch[i], SettingsManager.GetInstance().GetMaxQueryDepth(), undefined, undefined, true, (processedTXCount:number, foundTXCount : number, depth:number) => {
                     console.log(processedTXCount + "/" + foundTXCount + " with depth " + depth);
                 });
-
-                //Cache Results
-                //let cacheExporter = new GraphExporter(graph.addressesToSearch[i]);
-                //cacheExporter.AddAddressSubGraph(graph.addressesToSearch[i]);
-                //cacheExporter.ExportToCSV("Cache");
 
                 //Add to Subgraph
                 subGraph.AddAddress(graph.addressesToSearch[i]);
             }
 
-            subGraph.ExportAllUnspentAddressHashes("Database");
-            subGraph.ExportAllTransactionHashes("Database");
-
-            //Export commands
-            //let exporter = new GraphExporter(graph.name);
-            //exporter.AddAll();
-            //Export(exporter);
-            //console.log("Unspent value in end addresses from "+graph.name+": " + exporter.GetUnspentValue());
+            //Optional Caching
+            if(settings.caching) {
+                subGraph.CacheAllAddresses();
+            }
 
             //Add Subgraph to main graph and optionally render
             if(settings.seperateRender) {
@@ -63,22 +50,3 @@ export async function GenerateGraph( settings : Request ) : Promise<Graph> {
     });
     
 }
-
-// function Export(exporter : GraphExporter) {
-//     if(command.seperateRender) {
-//         exporter.ExportToDOT();
-//     }
-//     if(command.outputAllAddresses) {
-//         exporter.ExportAllAddressHashes("Database");
-//     }
-//     if(command.outputAllBundles) {
-//         exporter.ExportAllBundleHashes("Database");
-//     }
-//     if(command.outputAllTxs) {
-//         exporter.ExportAllTransactionHashes("Database");
-//     }
-//     if(command.outputAllPositiveAddresses) {
-//         exporter.ExportAllUnspentAddressHashes("Database");
-//     }
-// }
-

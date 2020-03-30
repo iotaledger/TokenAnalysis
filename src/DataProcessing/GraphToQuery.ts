@@ -42,21 +42,9 @@ export interface Request {
      */
     seperateRender : boolean,
     /**
-     * Determine if it should output a .txt file will all involved transaction hashes.
+     * Caching {Node.js execution only} of the transactions between requests and sessions. 
      */
-    outputAllTxs : boolean, 
-    /**
-     * Determine if it should output a .txt file will all involved bundle hashes.
-     */
-    outputAllBundles : boolean, 
-    /**
-     * Determine if it should output a .txt file will all involved addresses.
-     */
-    outputAllAddresses : boolean, 
-    /**
-     * Determine if it should output a .txt file will all involved addresses with a positive value.
-     */
-    outputAllPositiveAddresses : boolean,
+    caching : boolean,
     /**
      * Array of the graphs to include in the process.
      */

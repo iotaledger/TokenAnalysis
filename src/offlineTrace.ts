@@ -11,11 +11,8 @@ const NewThefts : string[] = [
 
 export const command : Request = {
     name : "NewThefts",
+    caching : true,
     seperateRender : true,
-    outputAllTxs : false,
-    outputAllBundles : false,
-    outputAllAddresses : false,
-    outputAllPositiveAddresses : false,
     graphs : [ 
         new GraphToQuery("NewThefts", RenderType.ADD, "#fcc658", "#ffb621", undefined, undefined, NewThefts ),
         //new GraphToQuery("OKEx", RenderType.SUBTRACT, "#fa7602", "#fc8f30", OKExTxs, undefined, undefined ),
