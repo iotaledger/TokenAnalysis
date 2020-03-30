@@ -1,5 +1,5 @@
 export { Request, RenderType, GraphToQuery } from "./DataProcessing/GraphToQuery";
-export { GenerateGraph } from "./main";
+export { GenerateGraph } from "./GenerateGraph";
 export { AddressManager } from "./Address/AddressManager";
 export { Address } from "./Address/Address";
 export { BundleManager } from "./Bundle/BundleManager";

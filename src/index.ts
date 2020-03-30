@@ -1,6 +1,6 @@
 //Base
 export { Request, RenderType, GraphToQuery } from "./DataProcessing/GraphToQuery";
-export { GenerateGraph } from "./main";
+export { GenerateGraph } from "./GenerateGraph";
 
 //Data Structures
 export { AddressManager } from "./Address/AddressManager";

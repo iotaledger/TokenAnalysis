@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 exports.RenderType = GraphToQuery_1.RenderType;
 exports.GraphToQuery = GraphToQuery_1.GraphToQuery;
-var main_1 = require("./main");
-exports.GenerateGraph = main_1.GenerateGraph;
+var GenerateGraph_1 = require("./GenerateGraph");
+exports.GenerateGraph = GenerateGraph_1.GenerateGraph;
 //Data Structures
 var AddressManager_1 = require("./Address/AddressManager");
 exports.AddressManager = AddressManager_1.AddressManager;

@@ -117,4 +117,4 @@ function GenerateGraph(settings) {
     });
 }
 exports.GenerateGraph = GenerateGraph;
-//# sourceMappingURL=main.js.map
+//# sourceMappingURL=GenerateGraph.js.map
