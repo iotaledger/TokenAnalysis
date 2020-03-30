@@ -1,14 +1,13 @@
-import { maxQueryDepth, command } from "./settings";
 import { DIRECTION, QueryAddress, QueryBundles, QueryTransactions } from "./DataProcessing/query";
-import { GraphExporter } from "./DataProcessing/GraphExporter";
-import { RenderType, Settings } from "./DataProcessing/GraphToQuery";
+import { RenderType, Request } from "./DataProcessing/GraphToQuery";
 import { Graph } from "./Graph/Graph";
 import { SubGraph } from "./Graph/SubGraph";
+import { SettingsManager } from "./SettingsManager";
 
 //Execution of the script
 //GenerateGraph(command);
 
-export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
+export async function GenerateGraph( settings : Request ) : Promise<Graph> {
     return new Promise<Graph>( async (resolve, reject) => {
         //Create the total Graph
         let combinedGraph : Graph = new Graph(settings.name);
@@ -25,7 +24,7 @@ export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
             graph.addressesToSearch = graph.addressesToSearch.concat(await QueryBundles(graph.bundlesToSearch, DIRECTION.BACKWARD, false));
             for(let i=0; i < graph.addressesToSearch.length; i++){ 
                 //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
-                await QueryAddress(graph.addressesToSearch[i], maxQueryDepth, undefined, undefined, (processedTXCount:number, foundTXCount : number, depth:number) => {
+                await QueryAddress(graph.addressesToSearch[i], SettingsManager.GetInstance().GetMaxQueryDepth(), undefined, undefined, (processedTXCount:number, foundTXCount : number, depth:number) => {
                     console.log(processedTXCount + "/" + foundTXCount + " with depth " + depth);
                 });
 
@@ -65,25 +64,21 @@ export async function GenerateGraph( settings : Settings ) : Promise<Graph> {
     
 }
 
-export function Update() {
-
-}
-
-function Export(exporter : GraphExporter) {
-    if(command.seperateRender) {
-        exporter.ExportToDOT();
-    }
-    if(command.outputAllAddresses) {
-        exporter.ExportAllAddressHashes("Database");
-    }
-    if(command.outputAllBundles) {
-        exporter.ExportAllBundleHashes("Database");
-    }
-    if(command.outputAllTxs) {
-        exporter.ExportAllTransactionHashes("Database");
-    }
-    if(command.outputAllPositiveAddresses) {
-        exporter.ExportAllUnspentAddressHashes("Database");
-    }
-}
+// function Export(exporter : GraphExporter) {
+//     if(command.seperateRender) {
+//         exporter.ExportToDOT();
+//     }
+//     if(command.outputAllAddresses) {
+//         exporter.ExportAllAddressHashes("Database");
+//     }
+//     if(command.outputAllBundles) {
+//         exporter.ExportAllBundleHashes("Database");
+//     }
+//     if(command.outputAllTxs) {
+//         exporter.ExportAllTransactionHashes("Database");
+//     }
+//     if(command.outputAllPositiveAddresses) {
+//         exporter.ExportAllUnspentAddressHashes("Database");
+//     }
+// }
 

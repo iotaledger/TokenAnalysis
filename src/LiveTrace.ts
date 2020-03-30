@@ -1,5 +1,5 @@
 import { GenerateGraph } from "./main";
-import { Settings, GraphToQuery, RenderType } from "./DataProcessing/GraphToQuery";
+import { Request, GraphToQuery, RenderType } from "./DataProcessing/GraphToQuery";
 import { AddressManager } from "./Address/AddressManager";
 import { Address } from "./Address/Address";
 import { QueryAddress } from "./DataProcessing/query";
@@ -9,7 +9,7 @@ Trace(process.argv[2])
 
 async function Trace(addressToTrace : string) {
     //Known transactions
-    let settings : Settings = {
+    let settings : Request = {
         name : addressToTrace,
         seperateRender : false,
         outputAllAddresses : false,

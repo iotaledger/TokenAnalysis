@@ -19,6 +19,8 @@ var TransactionManager_1 = require("./Transactions/TransactionManager");
 exports.TransactionManager = TransactionManager_1.TransactionManager;
 var Transaction_1 = require("./Transactions/Transaction");
 exports.Transaction = Transaction_1.Transaction;
+var SettingsManager_1 = require("./SettingsManager");
+exports.SettingsManager = SettingsManager_1.SettingsManager;
 //Graphs
 var DatabaseManager_1 = require("./DataProcessing/DatabaseManager");
 exports.DatabaseManager = DatabaseManager_1.DatabaseManager;

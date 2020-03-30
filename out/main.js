@@ -36,11 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var settings_1 = require("./settings");
 var query_1 = require("./DataProcessing/query");
 var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 var Graph_1 = require("./Graph/Graph");
 var SubGraph_1 = require("./Graph/SubGraph");
+var SettingsManager_1 = require("./SettingsManager");
 //Execution of the script
 //GenerateGraph(command);
 function GenerateGraph(settings) {
@@ -78,7 +78,7 @@ function GenerateGraph(settings) {
                             case 4:
                                 if (!(i < graph.addressesToSearch.length)) return [3 /*break*/, 7];
                                 //DatabaseManager.ImportFromCSV("Cache", graph.addressesToSearch[i]);
-                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], settings_1.maxQueryDepth, undefined, undefined, function (processedTXCount, foundTXCount, depth) {
+                                return [4 /*yield*/, query_1.QueryAddress(graph.addressesToSearch[i], SettingsManager_1.SettingsManager.GetInstance().GetMaxQueryDepth(), undefined, undefined, function (processedTXCount, foundTXCount, depth) {
                                         console.log(processedTXCount + "/" + foundTXCount + " with depth " + depth);
                                     })];
                             case 5:
@@ -128,24 +128,21 @@ function GenerateGraph(settings) {
     });
 }
 exports.GenerateGraph = GenerateGraph;
-function Update() {
-}
-exports.Update = Update;
-function Export(exporter) {
-    if (settings_1.command.seperateRender) {
-        exporter.ExportToDOT();
-    }
-    if (settings_1.command.outputAllAddresses) {
-        exporter.ExportAllAddressHashes("Database");
-    }
-    if (settings_1.command.outputAllBundles) {
-        exporter.ExportAllBundleHashes("Database");
-    }
-    if (settings_1.command.outputAllTxs) {
-        exporter.ExportAllTransactionHashes("Database");
-    }
-    if (settings_1.command.outputAllPositiveAddresses) {
-        exporter.ExportAllUnspentAddressHashes("Database");
-    }
-}
+// function Export(exporter : GraphExporter) {
+//     if(command.seperateRender) {
+//         exporter.ExportToDOT();
+//     }
+//     if(command.outputAllAddresses) {
+//         exporter.ExportAllAddressHashes("Database");
+//     }
+//     if(command.outputAllBundles) {
+//         exporter.ExportAllBundleHashes("Database");
+//     }
+//     if(command.outputAllTxs) {
+//         exporter.ExportAllTransactionHashes("Database");
+//     }
+//     if(command.outputAllPositiveAddresses) {
+//         exporter.ExportAllUnspentAddressHashes("Database");
+//     }
+// }
 //# sourceMappingURL=main.js.map

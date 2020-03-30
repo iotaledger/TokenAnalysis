@@ -1,7 +1,7 @@
-import { maxTryCount, ProviderList } from "../settings";
 import { composeAPI, Transaction } from "@iota/core";
 import { AddressManager } from "../Address/AddressManager";
 import { BundleManager } from "../Bundle/BundleManager";
+import { SettingsManager } from "../SettingsManager";
 
 //In time
 export enum DIRECTION {
@@ -107,8 +107,8 @@ export async function QueryBundles(bundles : string[], queryDirection : DIRECTIO
 
 export async function Query(request : QueryRequest) : Promise<Transaction[]> {
     return new Promise<Transaction[]>(async (resolve, reject) => {
-        for(let i=0; i < maxTryCount; i++) {
-            let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
+        for(let i=0; i < SettingsManager.GetInstance().GetMaxTryCount(); i++) {
+            let provider = SettingsManager.GetInstance().GetRandomNode();
             let iota = composeAPI({provider : provider});
             try {
                 let result = await _Query(request, iota);
@@ -117,7 +117,7 @@ export async function Query(request : QueryRequest) : Promise<Transaction[]> {
             }
             catch(err) {
                 console.log("Error caught for node "+provider+": " + err);
-                console.log("Request: " + JSON.stringify(request));
+                SettingsManager.GetInstance().RestNode(provider);
             }
         }
         reject("Rejected request as MaxTryCount is reached");
@@ -138,8 +138,8 @@ async function _Query(request : QueryRequest, iota : any) : Promise<Transaction[
 
 export async function GetInclusionStates(transactions : string[]) : Promise<boolean[]> {
     return new Promise<boolean[]>(async (resolve, reject) => {
-        for(let i=0; i < maxTryCount; i++) {
-            let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
+        for(let i=0; i < SettingsManager.GetInstance().GetMaxTryCount(); i++) {
+            let provider = SettingsManager.GetInstance().GetRandomNode();
             let iota = composeAPI({provider : provider});
             try {
                 let result = await _GetInclusionStates(transactions, iota);
@@ -148,6 +148,7 @@ export async function GetInclusionStates(transactions : string[]) : Promise<bool
             }
             catch(err) {
                 console.log("Error caught for node "+provider+" : " + err);
+                SettingsManager.GetInstance().RestNode(provider);
             }
         }
         reject("Rejected request as MaxTryCount is reached");
@@ -168,8 +169,8 @@ async function _GetInclusionStates(transactions : string[], iota : any) : Promis
 
 export async function getReceivingAddress(transactions : string) : Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
-        for(let i=0; i < maxTryCount; i++) {
-            let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
+        for(let i=0; i < SettingsManager.GetInstance().GetMaxTryCount(); i++) {
+            let provider = SettingsManager.GetInstance().GetRandomNode();
             let iota = composeAPI({provider : provider});
             try {
                 let result = await iota.getTransactionObjects(<readonly string[]>[transactions]);
@@ -178,6 +179,7 @@ export async function getReceivingAddress(transactions : string) : Promise<strin
             }
             catch(err) {
                 console.log("Error caught for node "+provider+" : " + err);
+                SettingsManager.GetInstance().RestNode(provider);
             }
         }
         reject("Rejected request as MaxTryCount is reached");

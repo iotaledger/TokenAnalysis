@@ -29,10 +29,10 @@ export enum RenderType {
 }
 
 /**
- * Settings
+ * Request
  * @description Interface which is used as a base for the GenerateGraph function.
  */
-export interface Settings {
+export interface Request {
     /**
      * Name of the output files. Must be unique otherwise it might overwrite previous created files
      */

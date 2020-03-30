@@ -1,5 +1,5 @@
 //Base
-export { Settings, RenderType, GraphToQuery } from "./DataProcessing/GraphToQuery";
+export { Request, RenderType, GraphToQuery } from "./DataProcessing/GraphToQuery";
 export { GenerateGraph } from "./main";
 
 //Data Structures
@@ -9,6 +9,7 @@ export { BundleManager } from "./Bundle/BundleManager";
 export { Bundle } from "./Bundle/Bundle";
 export { TransactionManager } from "./Transactions/TransactionManager";
 export { Transaction } from "./Transactions/Transaction";
+export { SettingsManager } from "./SettingsManager";
 
 //Graphs
 export { DatabaseManager } from "./DataProcessing/DatabaseManager"; 

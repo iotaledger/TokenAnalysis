@@ -43,10 +43,10 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var settings_1 = require("../settings");
 var core_1 = require("@iota/core");
 var AddressManager_1 = require("../Address/AddressManager");
 var BundleManager_1 = require("../Bundle/BundleManager");
+var SettingsManager_1 = require("../SettingsManager");
 //In time
 var DIRECTION;
 (function (DIRECTION) {
@@ -219,8 +219,8 @@ function Query(request) {
                                 i = 0;
                                 _a.label = 1;
                             case 1:
-                                if (!(i < settings_1.maxTryCount)) return [3 /*break*/, 6];
-                                provider = settings_1.ProviderList[Math.floor(Math.random() * settings_1.ProviderList.length)];
+                                if (!(i < SettingsManager_1.SettingsManager.GetInstance().GetMaxTryCount())) return [3 /*break*/, 6];
+                                provider = SettingsManager_1.SettingsManager.GetInstance().GetRandomNode();
                                 iota = core_1.composeAPI({ provider: provider });
                                 _a.label = 2;
                             case 2:
@@ -233,7 +233,7 @@ function Query(request) {
                             case 4:
                                 err_1 = _a.sent();
                                 console.log("Error caught for node " + provider + ": " + err_1);
-                                console.log("Request: " + JSON.stringify(request));
+                                SettingsManager_1.SettingsManager.GetInstance().RestNode(provider);
                                 return [3 /*break*/, 5];
                             case 5:
                                 i++;
@@ -275,8 +275,8 @@ function GetInclusionStates(transactions) {
                                 i = 0;
                                 _a.label = 1;
                             case 1:
-                                if (!(i < settings_1.maxTryCount)) return [3 /*break*/, 6];
-                                provider = settings_1.ProviderList[Math.floor(Math.random() * settings_1.ProviderList.length)];
+                                if (!(i < SettingsManager_1.SettingsManager.GetInstance().GetMaxTryCount())) return [3 /*break*/, 6];
+                                provider = SettingsManager_1.SettingsManager.GetInstance().GetRandomNode();
                                 iota = core_1.composeAPI({ provider: provider });
                                 _a.label = 2;
                             case 2:
@@ -289,6 +289,7 @@ function GetInclusionStates(transactions) {
                             case 4:
                                 err_2 = _a.sent();
                                 console.log("Error caught for node " + provider + " : " + err_2);
+                                SettingsManager_1.SettingsManager.GetInstance().RestNode(provider);
                                 return [3 /*break*/, 5];
                             case 5:
                                 i++;
@@ -334,8 +335,8 @@ function getReceivingAddress(transactions) {
                                 i = 0;
                                 _a.label = 1;
                             case 1:
-                                if (!(i < settings_1.maxTryCount)) return [3 /*break*/, 6];
-                                provider = settings_1.ProviderList[Math.floor(Math.random() * settings_1.ProviderList.length)];
+                                if (!(i < SettingsManager_1.SettingsManager.GetInstance().GetMaxTryCount())) return [3 /*break*/, 6];
+                                provider = SettingsManager_1.SettingsManager.GetInstance().GetRandomNode();
                                 iota = core_1.composeAPI({ provider: provider });
                                 _a.label = 2;
                             case 2:
@@ -348,6 +349,7 @@ function getReceivingAddress(transactions) {
                             case 4:
                                 err_3 = _a.sent();
                                 console.log("Error caught for node " + provider + " : " + err_3);
+                                SettingsManager_1.SettingsManager.GetInstance().RestNode(provider);
                                 return [3 /*break*/, 5];
                             case 5:
                                 i++;
