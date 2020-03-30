@@ -1,4 +1,4 @@
-import { DIRECTION, QueryAddress, QueryBundles, QueryTransactions } from "./DataProcessing/query";
+import { DIRECTION, QueryAddress, QueryBundles, QueryTransactions } from "./DataProcessing/Query";
 import { RenderType, Request } from "./DataProcessing/GraphToQuery";
 import { Graph } from "./Graph/Graph";
 import { SubGraph } from "./Graph/SubGraph";

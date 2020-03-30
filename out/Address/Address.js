@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var query_1 = require("../DataProcessing/query");
+var Query_1 = require("../DataProcessing/Query");
 var TransactionManager_1 = require("../Transactions/TransactionManager");
 var Address = /** @class */ (function () {
     function Address(addr) {
@@ -60,7 +60,7 @@ var Address = /** @class */ (function () {
                 return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                         var _this = this;
                         return __generator(this, function (_a) {
-                            query_1.Query({ addresses: [this.addr] })
+                            Query_1.Query({ addresses: [this.addr] })
                                 .then(function (transactions) {
                                 //Loop over the transactions
                                 var transactionHashes = [];
@@ -68,7 +68,7 @@ var Address = /** @class */ (function () {
                                     transactionHashes.push(transactions[k].hash);
                                 }
                                 //Filter out unconfirmed transactions
-                                query_1.GetInclusionStates(transactionHashes)
+                                Query_1.GetInclusionStates(transactionHashes)
                                     .then(function (inclusionResults) {
                                     //Remove Transactions are that are not confirmed
                                     transactions = transactions.filter(function (transaction, index) {

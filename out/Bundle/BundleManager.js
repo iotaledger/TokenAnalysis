@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Bundle_1 = require("./Bundle");
-var query_1 = require("../DataProcessing/query");
+var Query_1 = require("../DataProcessing/Query");
 var BundleManager = /** @class */ (function () {
     function BundleManager() {
         this.bundles = new Map();
@@ -47,7 +47,7 @@ var BundleManager = /** @class */ (function () {
     };
     BundleManager.prototype.AddBundle = function (bundleHash, refresh, loadDirection, store) {
         if (refresh === void 0) { refresh = false; }
-        if (loadDirection === void 0) { loadDirection = query_1.DIRECTION.FORWARD; }
+        if (loadDirection === void 0) { loadDirection = Query_1.DIRECTION.FORWARD; }
         if (store === void 0) { store = true; }
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -67,10 +67,10 @@ var BundleManager = /** @class */ (function () {
                                 if (store)
                                     _this.bundles.set(bundleHash, bundle_1);
                                 //Return the next addresses to process
-                                if (loadDirection == query_1.DIRECTION.FORWARD) {
+                                if (loadDirection == Query_1.DIRECTION.FORWARD) {
                                     resolve(bundle_1.GetOutAddresses());
                                 }
-                                else if (loadDirection == query_1.DIRECTION.BACKWARD) {
+                                else if (loadDirection == Query_1.DIRECTION.BACKWARD) {
                                     resolve(bundle_1.GetInAddresses());
                                 }
                             })
@@ -78,10 +78,10 @@ var BundleManager = /** @class */ (function () {
                         }
                         else {
                             if (!store) {
-                                if (loadDirection == query_1.DIRECTION.FORWARD) {
+                                if (loadDirection == Query_1.DIRECTION.FORWARD) {
                                     resolve((_a = _this.bundles.get(bundleHash)) === null || _a === void 0 ? void 0 : _a.GetOutAddresses());
                                 }
-                                else if (loadDirection == query_1.DIRECTION.BACKWARD) {
+                                else if (loadDirection == Query_1.DIRECTION.BACKWARD) {
                                     resolve((_b = _this.bundles.get(bundleHash)) === null || _b === void 0 ? void 0 : _b.GetInAddresses());
                                 }
                             }

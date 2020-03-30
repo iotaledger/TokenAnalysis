@@ -365,4 +365,4 @@ function getReceivingAddress(transactions) {
     });
 }
 exports.getReceivingAddress = getReceivingAddress;
-//# sourceMappingURL=query.js.map
+//# sourceMappingURL=Query.js.map

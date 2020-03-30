@@ -1,5 +1,5 @@
 import { Address } from "./Address";
-import { DIRECTION } from "../DataProcessing/query";
+import { DIRECTION } from "../DataProcessing/Query";
 export declare class AddressManager {
     private static instance;
     private addresses;

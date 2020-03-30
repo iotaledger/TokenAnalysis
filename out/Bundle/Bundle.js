@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var query_1 = require("../DataProcessing/query");
+var Query_1 = require("../DataProcessing/Query");
 var TransactionManager_1 = require("../Transactions/TransactionManager");
 var Bundle = /** @class */ (function () {
     function Bundle(bundleHash) {
@@ -56,13 +56,13 @@ var Bundle = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) {
-                        query_1.Query({ bundles: [_this.hash] })
+                        Query_1.Query({ bundles: [_this.hash] })
                             .then(function (transactions) {
                             var transactionHashes = [];
                             for (var k = 0; k < transactions.length; k++) {
                                 transactionHashes.push(transactions[k].hash);
                             }
-                            query_1.GetInclusionStates(transactionHashes)
+                            Query_1.GetInclusionStates(transactionHashes)
                                 .then(function (inclusionResults) {
                                 //Filter out unconfirmed and 0-value transactions
                                 transactions = transactions.filter(function (transaction, index) {

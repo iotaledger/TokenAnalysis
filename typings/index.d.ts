@@ -10,4 +10,4 @@ export { SettingsManager } from "./SettingsManager";
 export { DatabaseManager } from "./DataProcessing/DatabaseManager";
 export { Graph } from "./Graph/Graph";
 export { SubGraph } from "./Graph/SubGraph";
-export { QueryAddress, QueryTransactions, QueryBundles, DIRECTION } from "./DataProcessing/query";
+export { QueryAddress, QueryTransactions, QueryBundles, DIRECTION } from "./DataProcessing/Query";

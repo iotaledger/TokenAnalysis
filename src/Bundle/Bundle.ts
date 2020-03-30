@@ -1,4 +1,4 @@
-import { Query, GetInclusionStates } from "../DataProcessing/query";
+import { Query, GetInclusionStates } from "../DataProcessing/Query";
 import { TransactionManager } from "../Transactions/TransactionManager";
 
 export class Bundle {

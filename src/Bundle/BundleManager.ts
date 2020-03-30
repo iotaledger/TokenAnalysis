@@ -1,5 +1,5 @@
 import { Bundle } from "./Bundle";
-import { DIRECTION } from "../DataProcessing/query";
+import { DIRECTION } from "../DataProcessing/Query";
 
 export class BundleManager {
     private static instance : BundleManager;

@@ -1,5 +1,5 @@
 import { Address } from "./Address";
-import { DIRECTION } from "../DataProcessing/query";
+import { DIRECTION } from "../DataProcessing/Query";
 import { DatabaseManager } from "../DataProcessing/DatabaseManager";
 
 

@@ -1,4 +1,4 @@
-import { Query, GetInclusionStates } from "../DataProcessing/query";
+import { Query, GetInclusionStates } from "../DataProcessing/Query";
 import { Transaction } from "@iota/core";
 import { TransactionManager } from "../Transactions/TransactionManager";
 
