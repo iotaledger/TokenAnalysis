@@ -1,8 +1,8 @@
-import { DIRECTION, QueryAddress, QueryBundles, QueryTransactions } from "./DataProcessing/Query";
-import { RenderType, Request } from "./DataProcessing/GraphToQuery";
-import { Graph } from "./Graph/Graph";
-import { SubGraph } from "./Graph/SubGraph";
-import { SettingsManager } from "./SettingsManager";
+import { DIRECTION, QueryAddress, QueryBundles, QueryTransactions } from "../DataProcessing/Query";
+import { RenderType, Request } from "../DataProcessing/GraphToQuery";
+import { Graph } from "./Graph";
+import { SubGraph } from "./SubGraph";
+import { SettingsManager } from "../DataProcessing/SettingsManager";
 
 export async function GenerateGraph( settings : Request ) : Promise<Graph> {
     return new Promise<Graph>( async (resolve, reject) => {

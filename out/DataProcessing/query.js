@@ -46,7 +46,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@iota/core");
 var AddressManager_1 = require("../Address/AddressManager");
 var BundleManager_1 = require("../Bundle/BundleManager");
-var SettingsManager_1 = require("../SettingsManager");
+var SettingsManager_1 = require("./SettingsManager");
 //In time
 var DIRECTION;
 (function (DIRECTION) {

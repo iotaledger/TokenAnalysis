@@ -1,7 +1,7 @@
 import { composeAPI, Transaction } from "@iota/core";
 import { AddressManager } from "../Address/AddressManager";
 import { BundleManager } from "../Bundle/BundleManager";
-import { SettingsManager } from "../SettingsManager";
+import { SettingsManager } from "./SettingsManager";
 
 //In time
 export enum DIRECTION {
