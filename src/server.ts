@@ -2,14 +2,15 @@ import { Server } from "http";
 import SocketIO from "socket.io";
 import { zmqUnsubscribe } from "./Routes/zmqUnsubscribe";
 import { ZmqService } from "./Services/zmqService";
-
+import { ApiClient } from "./Services/apiClient";
 
 import { ServiceFactory } from "./Factories/serviceFactory";
 import { zmqSubscribeAddress } from "./Routes/zmqSubscribeAddress";
-import { zmqConfig, port } from "./settings-default"
+import { zmqConfig, port, domain} from "./settings-default"
 
 
 ServiceFactory.register("zmq", () => new ZmqService(zmqConfig.zmq));
+ServiceFactory.register("api", () => new ApiClient(domain));
 
 const server = new Server();
 const socketServer = SocketIO(server).listen(port);
