@@ -4,6 +4,8 @@ import { Address } from "../Address/Address";
 import { TransactionManager } from "../Transactions/TransactionManager";
 import { Transaction } from "../Transactions/Transaction";
 import { Bundle } from "../Bundle/Bundle";
+import { PathManager } from "./PathManager";
+import { DatabaseManager } from "../DataProcessing/DatabaseManager";
 const fs = require('fs');
 
 export class Path {
@@ -20,9 +22,11 @@ export class Path {
 
         //Load initial path
         this.AddAddrToPath(addr, maxDepth);
+        //Register
+        PathManager.GetInstance().AddPath(this);
     }
 
-    private AddAddrToPath(addr : string, maxDepth : number = 1000) {
+    public AddAddrToPath(addr : string, maxDepth : number = 1000) {
         let addressesToCheck : string[] = [addr];
 
         //Create a List of all nodes (Addresses & Bundles)
@@ -109,12 +113,7 @@ export class Path {
          });
  
          //Store to File
-         fs.writeFile( folder + "/" + this.originalAddress + ".csv", fileString, (err : Error) => {
-             if(err) console.log("Error writing file: " + this.originalAddress + ":" + err);
-             else {
-                 console.log("Succesfully saved " + this.originalAddress);
-             }
-         });
+         DatabaseManager.WriteToFile(folder + "/" + this.originalAddress + ".csv", fileString);
     }
 
     public GetAddresses() : Map<string, Address> {
