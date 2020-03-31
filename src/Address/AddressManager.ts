@@ -2,7 +2,10 @@ import { Address } from "./Address";
 import { DIRECTION } from "../DataProcessing/Query";
 import { DatabaseManager } from "../DataProcessing/DatabaseManager";
 
-
+/**
+ * A singleton class which manages all loaded addresses.
+ * If any address was loaded before, it can be skipped and returned directly. 
+ */
 export class AddressManager {
     private static instance : AddressManager;
     private addresses : Map<string, Address>;
@@ -11,14 +14,25 @@ export class AddressManager {
         this.addresses = new Map<string, Address>();
     }
 
+    /**
+     * Manually adds an address to the manager without any queries.
+     * @param addr The address container to add.
+     */
     public LoadAddress(addr : Address) {
         this.addresses.set(addr.GetAddressHash(), addr);
     }
 
+    /**
+     * Queries an address and create the address container and adds it to this manager. 
+     * @param addr The address to query
+     * @param refresh A boolean value to set if the address should be queried again, even if it is already known. This makes sure any new transactions are found aswell.
+     * @param useCache A boolean value to set if the program should use the cache. This can be outdated info, but speeds up the result if anything was cached. 
+     * @param loadDirection The direction is which the address is queried in time. Forward returns output bundles, while backward returns input bundles.
+     */
     public async AddAddress(addr : string, refresh : boolean = false, useCache : boolean = false, loadDirection : DIRECTION = DIRECTION.FORWARD) : Promise<string[]> {
         return new Promise<string[]>( async (resolve, reject) => {
             //Check if the address was cached and load it
-            if(useCache) {
+            if(!this.addresses.has(addr) && useCache) {
                 DatabaseManager.ImportFromCSV("Cache", addr);
             }
 

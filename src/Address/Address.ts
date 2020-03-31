@@ -2,6 +2,10 @@ import { Query, GetInclusionStates } from "../DataProcessing/Query";
 import { Transaction } from "@iota/core";
 import { TransactionManager } from "../Transactions/TransactionManager";
 
+/**
+ * Data container for a loaded IOTA address.
+ * Only confirmed transactions are taken into account.
+ */
 export class Address {
     private addr : string;
     private timestamp : number;
@@ -17,6 +21,14 @@ export class Address {
         this.outTxs = [];
     }
 
+    /**
+     * Creates the container for an IOTA address manually without any queries
+     * @param addr The address to create the class for
+     * @param timestamp The timestamp of the last transaction
+     * @param currentValue The current value on the address
+     * @param inTxs The transaction hashes for the incoming transactions. Can be retrieved from the TransactionManager
+     * @param outTxs The transaction hashes for the outgoing transactions. Can be retrieved from the TransactionManager
+     */
     public SetData(addr : string, timestamp : number, currentValue : number, inTxs : string[], outTxs : string[]) {
         this.addr = addr;
         this.timestamp = timestamp; 
@@ -25,6 +37,9 @@ export class Address {
         this.outTxs = outTxs;
     }
 
+    /**
+     * Queries the address to fill all the data. Returns a promise for a boolean if any transactions are found on the address.
+     */
     public async Query() : Promise<boolean> {
         return new Promise<boolean>(async (resolve, reject) => {
             Query({addresses:[this.addr]})

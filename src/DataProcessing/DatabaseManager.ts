@@ -54,7 +54,7 @@ export namespace DatabaseManager {
                     //Transaction loading
                     TransactionManager.GetInstance().AddTransaction(singleDatapoints[2], singleDatapoints[3], parseInt(singleDatapoints[4]), singleDatapoints[5], singleDatapoints[1]);
                 } else if(singleDatapoints[0] == "addr") {
-                        //Address Loading
+                    //Address Loading
                     let newAddress = new Address(singleDatapoints[1]);
                     newAddress.SetData(singleDatapoints[1], parseInt(singleDatapoints[2]), parseInt(singleDatapoints[3]), JSON.parse(singleDatapoints[4]), JSON.parse(singleDatapoints[5]));
                     AddressManager.GetInstance().LoadAddress(newAddress);
@@ -125,12 +125,13 @@ export namespace DatabaseManager {
 
         //Write to file
         if(name.length) {
-            fs.writeFile(name, fileString, (err : Error) => {
-                if(err) console.log("Error writing file: " + name + ":" + err);
-                else {
-                    //console.log("Succesfully saved " + name);
-                }
-            });
+            DatabaseManager.WriteToFile(name, fileString);
         }
+    }
+
+    export function WriteToFile(fileName : string, fileString : string) {
+        fs.writeFile(fileName, fileString, (err:Error) => {
+            if(err) console.log("Error writing file: " + fileName + ": " + err);
+        })
     }
 }

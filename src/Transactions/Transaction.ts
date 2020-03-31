@@ -1,3 +1,8 @@
+
+/**
+ * Data container for a loaded IOTA transaction.
+ * Only confirmed transactions are taken into account.
+ */
 export class Transaction {
     private input : string;
     private output : string;
@@ -21,10 +26,16 @@ export class Transaction {
         return this.hash;
     }    
 
+    /**
+     * Input address that has been spent
+     */
     public GetInput() : string {
         return this.input;
     }
 
+    /**
+     * The output address were the tokens go
+     */
     public GetOutput() : string {
         return this.output;
     }
