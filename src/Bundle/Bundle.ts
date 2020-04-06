@@ -1,4 +1,4 @@
-import { Query, GetInclusionStates } from "../DataProcessing/Query";
+import { Query, GetInclusionStates } from "../DataProcessing/query";
 import { TransactionManager } from "../Transactions/TransactionManager";
 
 /**

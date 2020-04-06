@@ -1,5 +1,5 @@
 import { Bundle } from "./Bundle";
-import { DIRECTION } from "../DataProcessing/Query";
+import { DIRECTION } from "../DataProcessing/query";
 
 /**
  * A singleton class which manages all loaded bundles.
