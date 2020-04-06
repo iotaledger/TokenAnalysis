@@ -188,7 +188,7 @@ export async function getReceivingAddress(transactions : string) : Promise<strin
 
 export async function getBundleHashFromTransaction(transactions : string) : Promise<string> {
     return new Promise<string>(async (resolve, reject) => {
-            let provider = ProviderList[Math.floor(Math.random()*ProviderList.length)];
+            let provider =  SettingsManager.GetInstance().GetRandomNode();
             let iota = composeAPI({provider : provider});
             try {
                 let result = await iota.getTransactionObjects(<readonly string[]>[transactions]);
