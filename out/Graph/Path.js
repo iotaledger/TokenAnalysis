@@ -10,6 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var AddressManager_1 = require("../Address/AddressManager");
 var BundleManager_1 = require("../Bundle/BundleManager");
 var TransactionManager_1 = require("../Transactions/TransactionManager");
+var fs = require('fs');
 var Path = /** @class */ (function () {
     function Path(addr, maxDepth) {
         if (maxDepth === void 0) { maxDepth = 1000; }
@@ -20,15 +21,6 @@ var Path = /** @class */ (function () {
         //Load initial path
         this.AddAddrToPath(addr, maxDepth);
     }
-    Path.prototype.UpdateEndpoints = function () {
-        var _this = this;
-        //Update all addresses with value should be updated via a Query
-        this.addresses.forEach(function (value, key) {
-            if (!value.IsSpent()) {
-                _this.AddAddrToPath(key);
-            }
-        });
-    };
     Path.prototype.AddAddrToPath = function (addr, maxDepth) {
         var _this = this;
         if (maxDepth === void 0) { maxDepth = 1000; }
@@ -74,6 +66,43 @@ var Path = /** @class */ (function () {
             var outputHash = value.GetOutput();
             if ((_this.addresses.has(inputHash) || _this.bundles.has(inputHash)) && (_this.addresses.has(outputHash) || _this.bundles.has(outputHash))) {
                 _this.edges.set(key, value);
+            }
+        });
+    };
+    Path.prototype.Cache = function (folder) {
+        var _this = this;
+        //Initialize
+        var fileString = "";
+        //Save Transactions
+        this.edges.forEach(function (value, key) {
+            fileString = fileString.concat("tx;" + key + ";" + value.GetInput() + ';' + value.GetOutput() + ";" + value.GetValue() + ";" + value.GetTag() + "\n");
+        });
+        //Save Addresses
+        this.addresses.forEach(function (value, key) {
+            //Initial Values
+            fileString = fileString.concat("addr;" + key + ";" + value.GetTimestamp() + ";" + value.GetCurrentValue());
+            //Arrays
+            fileString = fileString.concat(";" + JSON.stringify(value.GetInTxs()));
+            fileString = fileString.concat(";" + JSON.stringify(value.GetOutTxs()));
+            //Finish
+            fileString = fileString.concat("\n");
+        });
+        //Save Bundles
+        this.bundles.forEach(function (value, key) {
+            //Initial Values
+            fileString = fileString.concat("bundle;" + key + ";" + value.GetTimestamp());
+            //Arrays
+            fileString = fileString.concat(";" + JSON.stringify(value.GetInTxs()));
+            fileString = fileString.concat(";" + JSON.stringify(value.GetOutTxs()));
+            //Finish
+            fileString = fileString.concat("\n");
+        });
+        //Store to File
+        fs.writeFile(folder + "/" + this.originalAddress + ".csv", fileString, function (err) {
+            if (err)
+                console.log("Error writing file: " + _this.originalAddress + ":" + err);
+            else {
+                console.log("Succesfully saved " + _this.originalAddress);
             }
         });
     };

@@ -1,5 +1,5 @@
 {
-  "name": "attackfundsanalysis",
+  "name": "iota-token-tracer",
   "version": "1.0.1",
   "description": "",
   "main": "./out/index.js",

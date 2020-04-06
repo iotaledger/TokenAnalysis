@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 exports.RenderType = GraphToQuery_1.RenderType;
 exports.GraphToQuery = GraphToQuery_1.GraphToQuery;
-var main_1 = require("./main");
-exports.GenerateGraph = main_1.GenerateGraph;
+var GenerateGraph_1 = require("./Graph/GenerateGraph");
+exports.GenerateGraph = GenerateGraph_1.GenerateGraph;
 //Data Structures
 var AddressManager_1 = require("./Address/AddressManager");
 exports.AddressManager = AddressManager_1.AddressManager;
@@ -19,18 +19,18 @@ var TransactionManager_1 = require("./Transactions/TransactionManager");
 exports.TransactionManager = TransactionManager_1.TransactionManager;
 var Transaction_1 = require("./Transactions/Transaction");
 exports.Transaction = Transaction_1.Transaction;
+var SettingsManager_1 = require("./DataProcessing/SettingsManager");
+exports.SettingsManager = SettingsManager_1.SettingsManager;
 //Graphs
 var DatabaseManager_1 = require("./DataProcessing/DatabaseManager");
 exports.DatabaseManager = DatabaseManager_1.DatabaseManager;
-var GraphExporter_1 = require("./DataProcessing/GraphExporter");
-exports.GraphExporter = GraphExporter_1.GraphExporter;
 var Graph_1 = require("./Graph/Graph");
 exports.Graph = Graph_1.Graph;
 var SubGraph_1 = require("./Graph/SubGraph");
 exports.SubGraph = SubGraph_1.SubGraph;
-var query_1 = require("./DataProcessing/query");
-exports.QueryAddress = query_1.QueryAddress;
-exports.QueryTransactions = query_1.QueryTransactions;
-exports.QueryBundles = query_1.QueryBundles;
-exports.DIRECTION = query_1.DIRECTION;
+var Query_1 = require("./DataProcessing/Query");
+exports.QueryAddress = Query_1.QueryAddress;
+exports.QueryTransactions = Query_1.QueryTransactions;
+exports.QueryBundles = Query_1.QueryBundles;
+exports.DIRECTION = Query_1.DIRECTION;
 //# sourceMappingURL=index.js.map

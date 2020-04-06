@@ -18,10 +18,10 @@ export declare enum RenderType {
     NONE = 2
 }
 /**
- * Settings
+ * Request
  * @description Interface which is used as a base for the GenerateGraph function.
  */
-export interface Settings {
+export interface Request {
     /**
      * Name of the output files. Must be unique otherwise it might overwrite previous created files
      */
@@ -31,21 +31,9 @@ export interface Settings {
      */
     seperateRender: boolean;
     /**
-     * Determine if it should output a .txt file will all involved transaction hashes.
+     * Caching {Node.js execution only} of the transactions between requests and sessions.
      */
-    outputAllTxs: boolean;
-    /**
-     * Determine if it should output a .txt file will all involved bundle hashes.
-     */
-    outputAllBundles: boolean;
-    /**
-     * Determine if it should output a .txt file will all involved addresses.
-     */
-    outputAllAddresses: boolean;
-    /**
-     * Determine if it should output a .txt file will all involved addresses with a positive value.
-     */
-    outputAllPositiveAddresses: boolean;
+    caching: boolean;
     /**
      * Array of the graphs to include in the process.
      */

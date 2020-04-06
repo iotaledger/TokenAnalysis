@@ -43,10 +43,10 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var settings_1 = require("../settings");
 var core_1 = require("@iota/core");
 var AddressManager_1 = require("../Address/AddressManager");
 var BundleManager_1 = require("../Bundle/BundleManager");
+var SettingsManager_1 = require("./SettingsManager");
 //In time
 var DIRECTION;
 (function (DIRECTION) {
@@ -78,9 +78,10 @@ function QueryTransactions(txs) {
     });
 }
 exports.QueryTransactions = QueryTransactions;
-function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
+function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, useCache, callback) {
     if (queryDirection === void 0) { queryDirection = DIRECTION.FORWARD; }
     if (refresh === void 0) { refresh = false; }
+    if (useCache === void 0) { useCache = false; }
     if (callback === void 0) { callback = function () { }; }
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
@@ -106,7 +107,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                                 bundlePromises = [];
                                                 _loop_2 = function (i) {
                                                     //Query the Addresses
-                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, queryDirection)
+                                                    addrPromises.push(AddressManager_1.AddressManager.GetInstance().AddAddress(addressesToQuery[i], refresh, useCache, queryDirection)
                                                         .then(function (newBundles) { return __awaiter(_this, void 0, void 0, function () {
                                                         return __generator(this, function (_a) {
                                                             if (!newBundles.length) {
@@ -219,8 +220,8 @@ function Query(request) {
                                 i = 0;
                                 _a.label = 1;
                             case 1:
-                                if (!(i < settings_1.maxTryCount)) return [3 /*break*/, 6];
-                                provider = settings_1.ProviderList[Math.floor(Math.random() * settings_1.ProviderList.length)];
+                                if (!(i < SettingsManager_1.SettingsManager.GetInstance().GetMaxTryCount())) return [3 /*break*/, 6];
+                                provider = SettingsManager_1.SettingsManager.GetInstance().GetRandomNode();
                                 iota = core_1.composeAPI({ provider: provider });
                                 _a.label = 2;
                             case 2:
@@ -233,7 +234,7 @@ function Query(request) {
                             case 4:
                                 err_1 = _a.sent();
                                 console.log("Error caught for node " + provider + ": " + err_1);
-                                console.log("Request: " + JSON.stringify(request));
+                                SettingsManager_1.SettingsManager.GetInstance().RestNode(provider);
                                 return [3 /*break*/, 5];
                             case 5:
                                 i++;
@@ -275,8 +276,8 @@ function GetInclusionStates(transactions) {
                                 i = 0;
                                 _a.label = 1;
                             case 1:
-                                if (!(i < settings_1.maxTryCount)) return [3 /*break*/, 6];
-                                provider = settings_1.ProviderList[Math.floor(Math.random() * settings_1.ProviderList.length)];
+                                if (!(i < SettingsManager_1.SettingsManager.GetInstance().GetMaxTryCount())) return [3 /*break*/, 6];
+                                provider = SettingsManager_1.SettingsManager.GetInstance().GetRandomNode();
                                 iota = core_1.composeAPI({ provider: provider });
                                 _a.label = 2;
                             case 2:
@@ -289,6 +290,7 @@ function GetInclusionStates(transactions) {
                             case 4:
                                 err_2 = _a.sent();
                                 console.log("Error caught for node " + provider + " : " + err_2);
+                                SettingsManager_1.SettingsManager.GetInstance().RestNode(provider);
                                 return [3 /*break*/, 5];
                             case 5:
                                 i++;
@@ -334,8 +336,8 @@ function getReceivingAddress(transactions) {
                                 i = 0;
                                 _a.label = 1;
                             case 1:
-                                if (!(i < settings_1.maxTryCount)) return [3 /*break*/, 6];
-                                provider = settings_1.ProviderList[Math.floor(Math.random() * settings_1.ProviderList.length)];
+                                if (!(i < SettingsManager_1.SettingsManager.GetInstance().GetMaxTryCount())) return [3 /*break*/, 6];
+                                provider = SettingsManager_1.SettingsManager.GetInstance().GetRandomNode();
                                 iota = core_1.composeAPI({ provider: provider });
                                 _a.label = 2;
                             case 2:
@@ -348,6 +350,7 @@ function getReceivingAddress(transactions) {
                             case 4:
                                 err_3 = _a.sent();
                                 console.log("Error caught for node " + provider + " : " + err_3);
+                                SettingsManager_1.SettingsManager.GetInstance().RestNode(provider);
                                 return [3 /*break*/, 5];
                             case 5:
                                 i++;
@@ -362,4 +365,4 @@ function getReceivingAddress(transactions) {
     });
 }
 exports.getReceivingAddress = getReceivingAddress;
-//# sourceMappingURL=query.js.map
+//# sourceMappingURL=Query.js.map

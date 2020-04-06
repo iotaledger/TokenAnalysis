@@ -25,9 +25,9 @@ var SubGraph = /** @class */ (function () {
             this.paths.set(addr, new Path_1.Path(addr, maxDepth));
         }
     };
-    SubGraph.prototype.UpdateAddresses = function () {
-        this.paths.forEach(function (value, key) {
-            value.UpdateEndpoints();
+    SubGraph.prototype.CacheAllAddresses = function () {
+        this.paths.forEach(function (value) {
+            value.Cache("Cache");
         });
     };
     SubGraph.prototype.ExportToDOT = function () {

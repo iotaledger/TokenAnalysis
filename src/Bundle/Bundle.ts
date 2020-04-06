@@ -1,6 +1,10 @@
-import { Query, GetInclusionStates } from "../DataProcessing/query";
+import { Query, GetInclusionStates } from "../DataProcessing/Query";
 import { TransactionManager } from "../Transactions/TransactionManager";
 
+/**
+ * Data container for a loaded IOTA bundles.
+ * Only confirmed transactions are taken into account.
+ */
 export class Bundle {
     private hash : string;
     private timestamp : number;
@@ -14,6 +18,13 @@ export class Bundle {
         this.outTxs = [];
     }
 
+    /**
+     * Creates the container for an IOTA bundle manually without any queries
+     * @param bundle The bundlehash
+     * @param timestamp The timestamp of the bundle
+     * @param inTxs Transactionhashes of all the in bundles
+     * @param outTxs Transactionhashes of all the out bundles
+     */
     public SetData(bundle : string, timestamp : number, inTxs : string[], outTxs : string[]) {
         this.hash = bundle;
         this.timestamp = timestamp; 
@@ -21,6 +32,9 @@ export class Bundle {
         this.outTxs = outTxs;
     }
 
+    /**
+     * Queries the bundle to fill all the data. Returns a promise for a boolean if any transactions are found in the bundle.
+     */
     public async Query() : Promise<boolean>{
         return new Promise<boolean>((resolve, reject) => {
             Query({bundles:[this.hash]})

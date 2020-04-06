@@ -8,7 +8,7 @@ export declare class SubGraph {
     private renderColor?;
     constructor(name: string, endpointColor?: string, renderColor?: string);
     AddAddress(addr: string, maxDepth?: number): void;
-    UpdateAddresses(): void;
+    CacheAllAddresses(): void;
     ExportToDOT(): void;
     GetDOTString(): string;
     GetAddresses(): Map<string, Address>;

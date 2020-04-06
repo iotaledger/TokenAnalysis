@@ -37,7 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Address_1 = require("./Address");
-var query_1 = require("../DataProcessing/query");
+var Query_1 = require("../DataProcessing/Query");
+var DatabaseManager_1 = require("../DataProcessing/DatabaseManager");
 var AddressManager = /** @class */ (function () {
     function AddressManager() {
         this.addresses = new Map();
@@ -45,16 +46,22 @@ var AddressManager = /** @class */ (function () {
     AddressManager.prototype.LoadAddress = function (addr) {
         this.addresses.set(addr.GetAddressHash(), addr);
     };
-    AddressManager.prototype.AddAddress = function (addr, refresh, loadDirection) {
+    AddressManager.prototype.AddAddress = function (addr, refresh, useCache, loadDirection) {
         if (refresh === void 0) { refresh = false; }
-        if (loadDirection === void 0) { loadDirection = query_1.DIRECTION.FORWARD; }
+        if (useCache === void 0) { useCache = false; }
+        if (loadDirection === void 0) { loadDirection = Query_1.DIRECTION.FORWARD; }
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                         var newAddr_1;
                         var _this = this;
-                        return __generator(this, function (_a) {
+                        var _a;
+                        return __generator(this, function (_b) {
+                            //Check if the address was cached and load it
+                            if (useCache) {
+                                DatabaseManager_1.DatabaseManager.ImportFromCSV("Cache", addr);
+                            }
                             //Load the Addresses
                             if (!this.addresses.has(addr) || refresh) {
                                 newAddr_1 = new Address_1.Address(addr);
@@ -67,10 +74,10 @@ var AddressManager = /** @class */ (function () {
                                     }
                                     _this.addresses.set(addr, newAddr_1);
                                     //Return the next bundles to process
-                                    if (loadDirection == query_1.DIRECTION.FORWARD) {
+                                    if (loadDirection == Query_1.DIRECTION.FORWARD) {
                                         resolve(newAddr_1.GetOutBundles());
                                     }
-                                    else if (loadDirection == query_1.DIRECTION.BACKWARD) {
+                                    else if (loadDirection == Query_1.DIRECTION.BACKWARD) {
                                         resolve(newAddr_1.GetInBundles());
                                     }
                                 })
@@ -78,7 +85,7 @@ var AddressManager = /** @class */ (function () {
                             }
                             else {
                                 //Addresses has already been loaded
-                                resolve([]);
+                                resolve((_a = this.GetAddressItem(addr)) === null || _a === void 0 ? void 0 : _a.GetOutBundles());
                             }
                             return [2 /*return*/];
                         });
