@@ -1,18 +1,24 @@
 
+import { IConfiguration } from "../Models/IConfiguration";
+
 export class SettingsManager {
     private static instance : SettingsManager;
     private nodes : string[];
     private restTime : number;
     private maxTryCount : number;
     private maxQueryDepth : number;
+    private zmqConfig: IConfiguration;
+    private zmqPort: number ; 
 
     private constructor() {
         this.nodes = [];
         this.restTime = 2000;
         this.maxTryCount = 3;
         this.maxQueryDepth = 100;
+        this.zmqConfig  =  { "zmq": { "endpoint": "tcp://zmq.devnet.iota.org:5556"} };
+        this.zmqPort = 4000;
     }
-
+        
     /**
      * @param restTime Determines how long a node is not used when it fails. RestTime is in milliseconds. {Default = 2000 ms}
      */
@@ -47,6 +53,36 @@ export class SettingsManager {
     public GetMaxTryCount() : number {
         return this.maxTryCount;
     }
+
+    /**
+     * Returns the ZMQ Endpoint.
+     */
+    public GetZmqConfig() : IConfiguration {
+        console.log("jj", this.zmqConfig)
+        return this.zmqConfig;
+    }
+
+    /**
+     * @param zmqPort The port connected to the zmq. 
+     */
+    public SetZmqPort( zmqPort : number ) {
+        this.zmqPort = zmqPort;
+    }
+
+     /**
+     * Returns the port connected to the zmq.
+     */
+    public GetZmqPort() : number {
+        return this.zmqPort;
+    }
+
+    /**
+     * @param zmqConfig The zmq endpoint. 
+     */
+    public SetZmqConfig( zmqConfig : IConfiguration ) {
+        this.zmqConfig = zmqConfig;
+    }
+
 
     /**
      * @param nodes Adds an array of node URLS (including ports) to the program. It randomly picks a node for every request.
