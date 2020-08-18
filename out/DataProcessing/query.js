@@ -87,7 +87,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
         var _this = this;
         return __generator(this, function (_a) {
             return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                    var nextAddressesToQuery, endPoints, depth, processedTXCount, _loop_1;
+                    var nextAddressesToQuery, endPoints, depth, processedTXCount, maxQueryDepth, _loop_1;
                     var _this = this;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -96,6 +96,8 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                 endPoints = [];
                                 depth = 0;
                                 processedTXCount = 0;
+                                maxQueryDepth = SettingsManager_1.SettingsManager.GetInstance().GetMaxQueryDepth() // ugly patch to use SettingsManager
+                                ;
                                 _loop_1 = function () {
                                     var addressesToQuery, addrPromises, bundlePromises, _loop_2, i;
                                     return __generator(this, function (_a) {

@@ -36,6 +36,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
         let endPoints : string[] = [];
         let depth = 0;
         let processedTXCount = 0;
+        let maxQueryDepth = SettingsManager.GetInstance().GetMaxQueryDepth()  // ugly patch to use SettingsManager
 
         //Keep querying until max depth or end found
         while(nextAddressesToQuery.length && depth < maxQueryDepth) {
