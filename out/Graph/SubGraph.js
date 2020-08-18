@@ -7,6 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SubGraph = void 0;
 var DatabaseManager_1 = require("../DataProcessing/DatabaseManager");
 var Path_1 = require("./Path");
 var fs = require('fs');

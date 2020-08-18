@@ -43,6 +43,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getReceivingAddress = exports.GetInclusionStates = exports.Query = exports.QueryBundles = exports.QueryAddress = exports.QueryTransactions = exports.DIRECTION = void 0;
 var core_1 = require("@iota/core");
 var AddressManager_1 = require("../Address/AddressManager");
 var BundleManager_1 = require("../Bundle/BundleManager");
@@ -310,7 +311,7 @@ function _GetInclusionStates(transactions, iota) {
         return __generator(this, function (_a) {
             return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
                     return __generator(this, function (_a) {
-                        iota.getLatestInclusion(transactions)
+                        iota.getInclusionStates(transactions)
                             .then(function (result) {
                             resolve(result);
                         })

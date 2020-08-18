@@ -10,7 +10,7 @@ export class SettingsManager {
         this.nodes = [];
         this.restTime = 2000;
         this.maxTryCount = 3;
-        this.maxQueryDepth = 100;
+        this.maxQueryDepth = 10;
     }
 
     /**

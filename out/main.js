@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GenerateGraph = void 0;
 var query_1 = require("./DataProcessing/query");
 var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 var Graph_1 = require("./Graph/Graph");

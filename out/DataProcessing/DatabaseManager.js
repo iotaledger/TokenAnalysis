@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DatabaseManager = void 0;
 var Address_1 = require("../Address/Address");
 var Bundle_1 = require("../Bundle/Bundle");
 var AddressManager_1 = require("../Address/AddressManager");

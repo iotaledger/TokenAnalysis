@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SettingsManager = void 0;
 var SettingsManager = /** @class */ (function () {
     function SettingsManager() {
         this.nodes = [];
         this.restTime = 2000;
         this.maxTryCount = 3;
-        this.maxQueryDepth = 100;
+        this.maxQueryDepth = 10;
     }
     /**
      * @param restTime Determines how long a node is not used when it fails. RestTime is in milliseconds. {Default = 2000 ms}

@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Bundle = void 0;
 var query_1 = require("../DataProcessing/query");
 var TransactionManager_1 = require("../Transactions/TransactionManager");
 var Bundle = /** @class */ (function () {

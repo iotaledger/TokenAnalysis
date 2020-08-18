@@ -7,6 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Path = void 0;
 var AddressManager_1 = require("../Address/AddressManager");
 var BundleManager_1 = require("../Bundle/BundleManager");
 var TransactionManager_1 = require("../Transactions/TransactionManager");

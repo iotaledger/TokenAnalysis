@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AddressManager = void 0;
 var Address_1 = require("./Address");
 var query_1 = require("../DataProcessing/query");
 var AddressManager = /** @class */ (function () {

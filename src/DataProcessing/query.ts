@@ -157,7 +157,7 @@ export async function GetInclusionStates(transactions : string[]) : Promise<bool
 
 async function _GetInclusionStates(transactions : string[], iota : any) : Promise<boolean[]> {
     return new Promise<boolean[]>(async (resolve, reject) => {
-        iota.getLatestInclusion(transactions)
+        iota.getInclusionStates(transactions)
         .then((result : boolean[]) => {
             resolve(result);
         })

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ProviderList = exports.command = void 0;
 var main_1 = require("./main");
 var GraphToQuery_1 = require("./DataProcessing/GraphToQuery");
 var SettingsManager_1 = require("./SettingsManager");
