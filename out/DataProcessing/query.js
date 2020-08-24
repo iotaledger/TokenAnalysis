@@ -87,7 +87,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
         var _this = this;
         return __generator(this, function (_a) {
             return [2 /*return*/, new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-                    var nextAddressesToQuery, endPoints, depth, processedTXCount, maxQueryDepth, _loop_1;
+                    var nextAddressesToQuery, endPoints, depth, processedTXCount, maxQueryDepthFromSettings, _loop_1;
                     var _this = this;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
@@ -96,7 +96,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                 endPoints = [];
                                 depth = 0;
                                 processedTXCount = 0;
-                                maxQueryDepth = SettingsManager_1.SettingsManager.GetInstance().GetMaxQueryDepth() // ugly patch to use SettingsManager
+                                maxQueryDepthFromSettings = SettingsManager_1.SettingsManager.GetInstance().GetMaxQueryDepth() // ugly patch to use SettingsManager
                                 ;
                                 _loop_1 = function () {
                                     var addressesToQuery, addrPromises, bundlePromises, _loop_2, i;
@@ -142,7 +142,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                                 //Increment Depth
                                                 processedTXCount += addressesToQuery.length;
                                                 depth++;
-                                                if (depth == maxQueryDepth) {
+                                                if (depth == maxQueryDepthFromSettings) {
                                                     endPoints = endPoints.concat(addressesToQuery);
                                                 }
                                                 //Report intermediate
@@ -153,7 +153,7 @@ function QueryAddress(addr, maxQueryDepth, queryDirection, refresh, callback) {
                                 };
                                 _a.label = 1;
                             case 1:
-                                if (!(nextAddressesToQuery.length && depth < maxQueryDepth)) return [3 /*break*/, 3];
+                                if (!(nextAddressesToQuery.length && depth < maxQueryDepthFromSettings)) return [3 /*break*/, 3];
                                 return [5 /*yield**/, _loop_1()];
                             case 2:
                                 _a.sent();
