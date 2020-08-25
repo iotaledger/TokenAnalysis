@@ -36,10 +36,9 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
         let endPoints : string[] = [];
         let depth = 0;
         let processedTXCount = 0;
-        let maxQueryDepthFromSettings = SettingsManager.GetInstance().GetMaxQueryDepth()  // ugly patch to use SettingsManager
 
         //Keep querying until max depth or end found
-        while(nextAddressesToQuery.length && depth < maxQueryDepthFromSettings) {
+        while(nextAddressesToQuery.length && depth < maxQueryDepth) {
             const addressesToQuery = [...nextAddressesToQuery];
             nextAddressesToQuery = [];
             let addrPromises : Promise<void>[] = [];
@@ -69,7 +68,7 @@ export async function QueryAddress(addr : string, maxQueryDepth : number, queryD
             //Increment Depth
             processedTXCount += addressesToQuery.length;
             depth++;
-            if(depth == maxQueryDepthFromSettings) {
+            if(depth == maxQueryDepth) {
                 endPoints = endPoints.concat(addressesToQuery);
             }
 
